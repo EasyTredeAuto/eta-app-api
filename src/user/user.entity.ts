@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 
 @Entity()
 export class User {
@@ -14,9 +14,9 @@ export class User {
     binance_api: string
     @Column({type: 'varchar', length: 500, nullable: true})
     refreshToken: string
-    @Column({type: 'timestamp'})
+    @CreateDateColumn({type: 'timestamp'})
     createdAt: Date
-    @Column({type: 'timestamp'})
+    @UpdateDateColumn({type: 'timestamp'})
     updatedAt: Date
     @Column({type:'tinyint', default: true})
     isActive: boolean

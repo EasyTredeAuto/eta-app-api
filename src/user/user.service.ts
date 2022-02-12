@@ -8,32 +8,26 @@ export class UserService {
 
     constructor(
         @InjectRepository(User)
-        private readonly userRepository: Repository<User>
+        private userRepository: Repository<User>
     ) {}
 
     async getMany():Promise<User[]> {
         const result = await this.userRepository.find()
         return result
     }
-
     async getOne(id):Promise<User> {
         return await this.userRepository.findOne({where: {id}})
     }
-
-    async createOne(body):Promise<User[]> {
-        if (!body) throw new NotFoundException('user is not valid')
-        const result = await this.userRepository.create(body)
-        console.log(result)
-        return result
+    async create(body:User):Promise<User> {
+        const newUser =  await this.userRepository.create(body)
+        return await this.userRepository.save(newUser)
     }
-    
-    async updateOne(id, body):Promise<User> {
+    async update(id, body):Promise<User> {
         await this.userRepository.update({id}, body)
         return await this.userRepository.findOne({where: {id}})
     }
-    
     async deleteMany(ids):Promise<User[]> {
-        await this.userRepository.delete({ id: ids })
+        await this.userRepository.delete(ids)
         return await this.userRepository.find()
     }
 }
