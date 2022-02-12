@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { User } from './user.entity';
 import { UserService } from './user.service';
 
@@ -31,6 +31,7 @@ export class UserController {
     }
     
     @Delete(':ids')
+    @ApiOperation({ summary: 'json array => "[1,2]"' })
     deleteMany(@Param('ids') ids:string) {
         const Ids = JSON.parse(ids)
         return this.userService.deleteMany(Ids)

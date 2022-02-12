@@ -12,6 +12,7 @@ async function bootstrap() {
   // Swagger
   const options = new DocumentBuilder()
     .setTitle('AUTO TREAD PROJECT')
+    .setDescription('http://localhost:8000')
     .setVersion('1.0.0')
     .build()
 
