@@ -7,9 +7,9 @@ export class User {
     id:number;
     @Column({type: 'varchar', length: 255})
     email: string
-    @Column({type: 'varchar', length: 255})
+    @Column({type: 'varchar', length: 255, select: false})
     password: string
-    @Column({type: 'varchar', length: 500, nullable: true})
+    @Column({type: 'varchar', length: 500, nullable: true })
     binance_secret_api: string
     @Column({type: 'varchar', length: 500, nullable: true})
     binance_api: string

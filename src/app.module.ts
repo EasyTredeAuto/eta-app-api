@@ -9,9 +9,6 @@ import env from './utils/env';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (cs: ConfigService) => ({
@@ -25,6 +22,9 @@ import env from './utils/env';
         synchronize: true,
       }),
       inject: [ConfigService],
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
     }),
     UserModule,
     AuthModule
