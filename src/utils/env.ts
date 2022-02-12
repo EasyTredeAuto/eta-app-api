@@ -1,0 +1,13 @@
+export default {
+    // local secret key
+    PORT: "PORT",
+    JWT_SECRET_KEY: "JWT_SECRET_KEY",
+    SECRET_KEY:"SECRET_KEY",
+
+    // mysql connect
+    MYSQL_DB_NAME:"MYSQL_DB_NAME",
+    MYSQL_DB_USER:"MYSQL_DB_USER",
+    MYSQL_DB_PASSWORD:"MYSQL_DB_PASSWORD",
+    MYSQL_DB_PORT:"MYSQL_DB_PORT",
+    MYSQL_DB_HOST:"MYSQL_DB_HOST",
+}
