@@ -11,23 +11,28 @@ export class UserService {
         private userRepository: Repository<User>
     ) {}
 
-    async getMany():Promise<User[]> {
-        const result = await this.userRepository.find()
-        return result
+    async getMany() {
+        const data = await this.userRepository.find()
+        return {message: "Is all user", data }
     }
-    async getOne(id):Promise<User> {
-        return await this.userRepository.findOne({where: {id}})
+    async getOne(id) {
+        const data = await this.userRepository.findOne({where: {id}})
+        if (!data) throw new NotFoundException('User does not exists')
+        return {message: "Is a user", data }
     }
-    async create(body:User):Promise<User> {
+    async create(body:User) {
         const newUser =  await this.userRepository.create(body)
-        return await this.userRepository.save(newUser)
+        const data = await this.userRepository.save(newUser)
+        return {message: "User created.", data }
     }
-    async update(id, body):Promise<User> {
+    async update(id, body) {
         await this.userRepository.update({id}, body)
-        return await this.userRepository.findOne({where: {id}})
+        const data = await this.userRepository.findOne({where: {id}})
+        return {message: "User updated.", data }
     }
-    async deleteMany(ids):Promise<User[]> {
+    async deleteMany(ids) {
         await this.userRepository.delete(ids)
-        return await this.userRepository.find()
+        const data = await this.userRepository.find()
+        return {message: "User deleted.", data }
     }
 }

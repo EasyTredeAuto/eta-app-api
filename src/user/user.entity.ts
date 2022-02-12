@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
+import { hash } from 'bcrypt'
 
 @Entity()
 export class User {
@@ -20,4 +21,13 @@ export class User {
     updatedAt: Date
     @Column({type:'tinyint', default: true})
     isActive: boolean
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    async hashPassword() {
+        if (!this.password) {
+            return
+        }
+        this.password = await hash(this.password, 10)
+    }
 }
