@@ -9,12 +9,10 @@ export class User {
     email: string
     @Column({type: 'varchar', length: 255, select: false})
     password: string
-    @Column({type: 'varchar', length: 500, nullable: true })
+    @Column({type: 'varchar', length: 500, nullable: true, select: false })
     binance_secret_api: string
-    @Column({type: 'varchar', length: 500, nullable: true})
+    @Column({type: 'varchar', length: 500, nullable: true, select: false})
     binance_api: string
-    @Column({type: 'varchar', length: 500, nullable: true})
-    refreshToken: string
     @CreateDateColumn({type: 'timestamp'})
     createdAt: Date
     @UpdateDateColumn({type: 'timestamp'})
