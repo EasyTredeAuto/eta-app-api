@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { setDefaultUser } from './config/default-user';
 import env from './utils/env';
 
 async function bootstrap() {
@@ -16,6 +17,7 @@ async function bootstrap() {
     .addBearerAuth()
     .setVersion('1.0.0')
     .build()
+    setDefaultUser(configService)
 
   const document = SwaggerModule.createDocument(app, options)
   SwaggerModule.setup('api-doc', app, document)

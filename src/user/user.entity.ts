@@ -1,25 +1,28 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 import { hash } from 'bcrypt'
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id:number;
-    @Column({type: 'varchar', length: 255})
+    @Column()
     email: string
-    @Column({type: 'varchar', length: 255, select: false})
+    @Column({type: 'varchar', length: 128, select: false })
     password: string
     @Column({type: 'varchar', length: 500, nullable: true, select: false })
     binance_secret_api: string
     @Column({type: 'varchar', length: 500, nullable: true, select: false})
     binance_api: string
+    @Column({ type: 'simple-array'})
+    roles: string[]
+    @Column({ default: true })
+    active: boolean
     @CreateDateColumn({type: 'timestamp'})
     createdAt: Date
     @UpdateDateColumn({type: 'timestamp'})
     updatedAt: Date
-    @Column({type:'tinyint', default: true})
-    isActive: boolean
-
+    @DeleteDateColumn({type: 'timestamp', nullable: true, select: false})
+    deletedAt: Date
     @BeforeInsert()
     @BeforeUpdate()
     async hashPassword() {

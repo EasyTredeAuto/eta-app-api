@@ -1,5 +1,5 @@
 
-export class LoginDto {
+export class RegisterDto {
     email: string
     password: string
 }

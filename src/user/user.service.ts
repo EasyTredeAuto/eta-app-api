@@ -1,6 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RegisterDto } from 'src/auth/dtos';
 import { Repository } from 'typeorm';
+import { CreateUserDto } from './dtos/create-user.dto';
 import { User } from './user.entity';
 
 export interface UserFindOne {
@@ -32,16 +34,30 @@ export class UserService {
         if (!data) throw new NotFoundException('User does not exists')
         return {message: "Is a user", data }
     }
-    async create(body:User) {
+    async create(body:CreateUserDto) {
         const userExist = await this.userRepository.findOne({where: {email:body.email}})
         if (userExist) throw new BadRequestException('User already registered with email')
         const newUser =  await this.userRepository.create(body)
-        const data = await this.userRepository.save(newUser)
+        if (!newUser.roles) newUser.roles = ["AUTHOR"]
+        const data = await this.userRepository.save(newUser) as User
         delete data.password
         return {message: "User created", data }
     }
-    async update(id, body) {
-        const user = await this.userRepository.findOne({where: {id}})
+    async register(body:RegisterDto): Promise<User> {
+        const userExist = await this.userRepository.findOne({where: {email:body.email}})
+        if (userExist) throw new BadRequestException('User already registered with email')
+        const newUser =  await this.userRepository.create(body)
+        newUser.roles = ["AUTHOR"]
+        const data = await this.userRepository.save(newUser)
+        delete data.password
+        delete data.binance_secret_api
+        delete data.binance_api
+        delete data.deletedAt
+        delete data.active
+        return data
+    }
+    async update(body) {
+        const user = await this.userRepository.findOne({where: {email:body.email}})
         if (!user) throw new BadRequestException('User does not exist')
         const editedUser = Object.assign(user, body)
         await this.userRepository.save(editedUser)

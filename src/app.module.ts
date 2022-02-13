@@ -6,6 +6,8 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import env from './utils/env';
+import { AccessControlModule } from 'nest-access-control';
+import { roles } from './app.roles';
 
 @Module({
   imports: [
@@ -26,8 +28,9 @@ import env from './utils/env';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UserModule,
-    AuthModule
+    AccessControlModule.forRoles(roles),
+    AuthModule,
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

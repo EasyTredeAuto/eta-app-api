@@ -3,8 +3,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { Auth, User } from 'src/common/decorators';
 import { User as UserEntity} from 'src/user/user.entity';
 import { AuthService } from './auth.service';
-import { LoginDtp } from './dtos/login.dto';
-import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { LoginDto, RegisterDto } from './dtos';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('Auth')
@@ -18,12 +17,23 @@ export class AuthController {
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(
-        @Body() loginDto: LoginDtp,
+        @Body() loginDto: LoginDto,
         @User() user: UserEntity
     ) {
         const data = await this.authService.login(user)
         return {
             message: 'Login success',
+            data
+        }
+    }
+    
+    @Post('register')
+    async register(
+        @Body() user: RegisterDto,
+    ) {
+        const data = await this.authService.register(user)
+        return {
+            message: 'Register success',
             data
         }
     }

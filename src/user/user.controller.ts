@@ -1,14 +1,21 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ACGuard, InjectRolesBuilder, RolesBuilder, UseRoles, UserRoles } from 'nest-access-control';
+import { AppResources } from 'src/app.roles';
 import { Auth } from 'src/common/decorators';
-import { User } from './user.entity';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { EditUserDto } from './dtos/edit-user.dto';
 import { UserService } from './user.service';
 
 @ApiTags('User')
 @Controller('user')
 export class UserController {
 
-    constructor(private userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        @InjectRolesBuilder()
+        private readonly rolesBuilder: RolesBuilder 
+    ) {}
 
     @Get()
     getMany() {
@@ -20,17 +27,20 @@ export class UserController {
         return this.userService.getOne(id)
     }
 
-    @Auth()
+    @Auth({
+        possession: 'any',
+        action: 'create',
+        resource: AppResources.USER
+    })
     @Post()
-    createOne(@Body() body:User) {
-        return this.userService.create(body)
+    async createOne(@Body() body:CreateUserDto) {
+        return await this.userService.create(body)
     }
     
     @Auth()
     @Put()
-    updateOne(@Body() body:User) {
-        const { id } = body
-        return this.userService.update(id, body)
+    updateOne(@Body() user:EditUserDto) {
+        return this.userService.update(user)
     }
     
     @Auth()
