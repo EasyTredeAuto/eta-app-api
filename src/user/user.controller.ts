@@ -2,9 +2,10 @@ import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nes
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ACGuard, InjectRolesBuilder, RolesBuilder, UseRoles, UserRoles } from 'nest-access-control';
 import { AppResources } from 'src/app.roles';
-import { Auth } from 'src/common/decorators';
+import { Auth, User } from 'src/common/decorators';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
+import { User as UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -38,9 +39,25 @@ export class UserController {
     }
     
     @Auth()
-    @Put()
-    updateOne(@Body() user:EditUserDto) {
-        return this.userService.update(user)
+    @Put(':id')
+    async updateOne(
+        @Param('id') id: number,
+        @Body() dto:EditUserDto,
+        // @User() user:UserEntity
+        ) {
+        // let data
+        // if (
+        //     this.rolesBuilder
+        //         .can(user.roles)
+        //         .updateAny(AppResources.USER)
+        // ) {
+        let data = await this.userService.update(id, dto)
+        //     console.log('user update role admin')
+        // } else {
+        //     data = await this.userService.update(id, dto)
+        //     console.log('user update role author')
+        // }
+        return { message: 'User updated', data }
     }
     
     @Auth()

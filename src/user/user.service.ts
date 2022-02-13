@@ -57,7 +57,7 @@ export class UserService {
         delete data.active
         return data
     }
-    async update(body:EditUserDto) {
+    async update(id:number, body:EditUserDto) {
         const user = await this.userRepository.findOne({where: {id:body.id}})
         if (!user) throw new BadRequestException('User does not exist')
         const editedUser = Object.assign(user, body)

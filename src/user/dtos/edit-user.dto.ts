@@ -11,6 +11,9 @@ export class EditUserDto  {
     @IsString()
     binance_api: string
 
+    @IsString()
+    roles: string[]
+
     @IsBoolean()
     active:boolean
 }
