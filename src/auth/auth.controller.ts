@@ -1,10 +1,12 @@
 import { Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
-import { User } from 'src/common/decorators';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Auth, User } from 'src/common/decorators';
 import { User as UserEntity} from 'src/user/user.entity';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
 
@@ -22,9 +24,19 @@ export class AuthController {
         }
     }
     
-    @UseGuards(JwtAuthGuard)
+    @Auth()
     @Get('profile')
     profile() {
         return 'asd'
+    }
+
+    @Auth()
+    @Get('refresh')
+    async refreshToken(@User() user: UserEntity){
+        const data = await this.authService.login(user)
+        return {
+            message: 'Refresh success',
+            data
+        }
     }
 }

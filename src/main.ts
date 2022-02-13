@@ -13,6 +13,7 @@ async function bootstrap() {
   const options = new DocumentBuilder()
     .setTitle('AUTO TREAD PROJECT')
     .setDescription('http://localhost:8000')
+    .addBearerAuth()
     .setVersion('1.0.0')
     .build()
 
