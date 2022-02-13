@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { RegisterDto } from 'src/auth/dtos';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { EditUserDto } from './dtos/edit-user.dto';
 import { User } from './user.entity';
 
 export interface UserFindOne {
@@ -56,8 +57,8 @@ export class UserService {
         delete data.active
         return data
     }
-    async update(body) {
-        const user = await this.userRepository.findOne({where: {email:body.email}})
+    async update(body:EditUserDto) {
+        const user = await this.userRepository.findOne({where: {id:body.id}})
         if (!user) throw new BadRequestException('User does not exist')
         const editedUser = Object.assign(user, body)
         await this.userRepository.save(editedUser)
