@@ -15,6 +15,8 @@ export const setDefaultUser = async (config: ConfigService) => {
         const adminUser = userRepository.create({
             email: config.get(env.DEFAULT_USER_EMAIL),
             password: config.get(env.DEFAULT_USER_PASSWORD),
+            binance_api: config.get(env.DEFAULT_API_KEY),
+            binance_secret_api: config.get(env.DEFAULT_SECRET_KEY),
             roles: ["ADMIN"]
         })
 

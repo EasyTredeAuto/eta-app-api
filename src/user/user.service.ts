@@ -26,6 +26,14 @@ export class UserService {
             .addSelect('user.password')
             .getOne()
     }
+    async findSecret(data: UserFindOne) {
+        return await this.userRepository
+            .createQueryBuilder('user')
+            .where(data)
+            .addSelect('user.binance_api')
+            .addSelect('user.binance_secret_api')
+            .getOne()
+    }
     async getMany() {
         const data = await this.userRepository.find()
         return {message: "Is all user", data }

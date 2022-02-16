@@ -1,8 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ApiQuery } from '@nestjs/swagger';
 import { BinanceCoinService } from './binance-coin.service';
 import { CoinsPriceResDto, CoinsResDto } from './dtos/coins.dto';
-import { CoinsPriceReqDto } from './dtos/coins.dto.req';
 
 @Controller('binance-coin')
 export class BinanceCoinController {
@@ -27,5 +26,10 @@ export class BinanceCoinController {
         } else {
            return await this.binanceCoinService.getListCoinPrice(symbol)
         }
+    }
+    @Post("/spot/orderBuy")
+    async orderBuy(@Body('symbol') symbol: string) {
+        if (!symbol) throw new BadRequestException("symbol is valid");
+        return  await this.binanceCoinService.orderBuy(symbol)
     }
 }
