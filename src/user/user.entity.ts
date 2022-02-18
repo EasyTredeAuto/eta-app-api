@@ -1,6 +1,7 @@
 import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, OneToMany, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 import { hash } from 'bcrypt'
 import { Bot } from "src/binance-bot/bot.entity";
+import { MyBot } from "src/bot-user/mybot.entity";
 
 @Entity()
 export class User {
@@ -35,7 +36,12 @@ export class User {
 
     @JoinColumn()
     bot: Bot
+    @JoinColumn()
+    myBot: MyBot
 
     @OneToMany(()=>Bot, (bot:Bot) => bot.id)
     bots: Bot[]
+    
+    @OneToMany(()=>MyBot, (bot:MyBot) => bot.id)
+    myBots: MyBot[]
 }

@@ -27,8 +27,9 @@ export class BinanceCoinService {
         ex =  new ccxt.binance({
             httpsAgent: agent, 
             apiKey: keys.akey, 
-            secret: keys.skey, 
-            'verbose': false
+            secret: keys.skey,
+            'verbose': false,
+            options: { adjustForTimeDifference: true }
         });
         await this.cacheManager.set(key, ex)
         return ex

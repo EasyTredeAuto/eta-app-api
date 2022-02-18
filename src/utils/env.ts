@@ -20,4 +20,7 @@ export default {
     // binance api
     BINANCE_BASE_URL:"BINANCE_BASE_URL",
     LOCAL_BASE_URL:"LOCAL_BASE_URL",
+
+    // bot key
+    SECRET_KEY_BOT:"SECRET_KEY_BOT",
 }
