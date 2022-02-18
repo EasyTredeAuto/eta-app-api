@@ -35,7 +35,6 @@ export class BotBinanceTradeService {
         let isAmount
         const balance = await this.binanceService.freeBalance(email)
         const market = await this.binanceService.getListCoinPrice(symbol)
-        const price = parseFloat(market.price) + 50
         if (amountType === 'amount') isAmount = amount / parseFloat(market.price)
         else isAmount = (parseFloat(balance.total[currency]) * (amount / 100)) / parseFloat(market.price)
         if ((balance.total[asset]  || 0) < isAmount) throw new BadRequestException("can't sell limit in whit balance")
