@@ -1,5 +1,5 @@
 import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { MyBot } from "./mybot.entity";
+import { MyBot } from "../bot-user/mybot.entity";
 
 @Entity()
 export class Transaction {
@@ -7,11 +7,11 @@ export class Transaction {
     id:number;
     @Column({type: 'varchar', length: 10})
     symbol: string
-    @Column()
+    @Column({ type : 'decimal', precision: 24, scale: 9 })
     amount: number
-    @Column()
+    @Column({ type : 'decimal', precision: 24, scale: 9 })
     quantity: number
-    @Column()
+    @Column({ type : 'decimal', precision: 24, scale: 9 })
     price: number
     @Column()
     side: string
@@ -20,9 +20,6 @@ export class Transaction {
     @UpdateDateColumn({type: 'timestamp'})
     updatedAt: Date
     
-    @Column()
-    defaultBotId: number
-
     @ManyToOne(()=> MyBot, (myBot: MyBot) => myBot.transactions)
-    botId: MyBot
+    bot: MyBot
 }

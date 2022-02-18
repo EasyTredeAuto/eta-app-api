@@ -1,6 +1,6 @@
 import { User } from "src/user/user.entity";
 import { Column, CreateDateColumn, DeleteDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { Transaction } from "./transaction-mybot.entity";
+import { Transaction } from "../public-trade/transaction-mybot.entity";
 
 @Entity()
 export class MyBot {
@@ -23,14 +23,11 @@ export class MyBot {
     @DeleteDateColumn({type: 'timestamp'})
     deletedAt: Date
 
-    @Column()
-    defaultUserId: number
-
-    @ManyToOne(()=> User, (user: User) => user.myBot, {onUpdate: 'CASCADE', onDelete: 'CASCADE'})
-    user: User
-
     @JoinColumn()
     transaction: Transaction
+
+    @ManyToOne(()=> User, (user: User) => user.myBots)
+    user: User
 
     @OneToMany(() => Transaction, (transaction:Transaction) => transaction.id)
     transactions: Transaction[]

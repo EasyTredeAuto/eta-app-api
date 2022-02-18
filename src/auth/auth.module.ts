@@ -20,7 +20,7 @@ import { LocalStrategy, JwtStrategy } from './strategies';
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get(env.JWT_SECRET_KEY),
-        signOptions: { expiresIn: '60m'}
+        signOptions: { expiresIn: '24h'}
       })
     })
   ],

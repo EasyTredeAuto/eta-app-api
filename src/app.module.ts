@@ -11,6 +11,7 @@ import { roles } from './app.roles';
 import { BinanceCoinModule } from './binance-coin/binance-coin.module';
 import { BinanceBotModule } from './binance-bot/binance-bot.module';
 import { BotUserModule } from './bot-user/bot-user.module';
+import { PublicTradeModule } from './public-trade/public-trade.module';
 
 @Module({
   imports: [
@@ -36,7 +37,8 @@ import { BotUserModule } from './bot-user/bot-user.module';
     UserModule,
     BinanceCoinModule,
     BinanceBotModule,
-    BotUserModule
+    BotUserModule,
+    PublicTradeModule
   ],
   controllers: [AppController],
   providers: [AppService],
