@@ -18,11 +18,13 @@ export class UserController {
         private readonly rolesBuilder: RolesBuilder 
     ) {}
 
+    @Auth()
     @Get()
     getMany() {
         return this.userService.getMany()
     }
 
+    @Auth()
     @Get(':id')
     getOne(@Param('id') id:number) {
         return this.userService.getOne(id)

@@ -9,6 +9,7 @@ import env from './utils/env';
 import { AccessControlModule } from 'nest-access-control';
 import { roles } from './app.roles';
 import { BinanceCoinModule } from './binance-coin/binance-coin.module';
+import { BinanceBotModule } from './binance-bot/binance-bot.module';
 
 @Module({
   imports: [
@@ -32,7 +33,8 @@ import { BinanceCoinModule } from './binance-coin/binance-coin.module';
     AccessControlModule.forRoles(roles),
     AuthModule,
     UserModule,
-    BinanceCoinModule
+    BinanceCoinModule,
+    BinanceBotModule
   ],
   controllers: [AppController],
   providers: [AppService],
