@@ -15,5 +15,5 @@ export class CreateUserDto {
         each: true,
         message: `mush be a valid role value, ${JSON.stringify(AppRoles)}`
     })
-    roles: string[]
+    roles: AppRoles
 }

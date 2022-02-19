@@ -1,9 +1,9 @@
 export default {
     // local secret key
+    NODE_ENV:"NODE_ENV",
     PORT: "PORT",
     JWT_SECRET_KEY: "JWT_SECRET_KEY",
     SECRET_KEY:"SECRET_KEY",
-    SERVER_PROD:'SERVER_PROD',
 
     // mysql connect
     MYSQL_DB_NAME:"MYSQL_DB_NAME",

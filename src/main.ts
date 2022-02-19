@@ -8,7 +8,13 @@ import env from './utils/env';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService)
-  app.enableCors()
+
+  var whitelist = ['http://localhost:3000', 'http://localhost:8000'];
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true
+  })
   
   // Swagger
   const options = new DocumentBuilder()
@@ -18,10 +24,11 @@ async function bootstrap() {
     .build()
     setDefaultUser(configService)
 
-  if (configService.get(env.SERVER_PROD) === 'develop') {
+  if (configService.get(env.NODE_ENV) === 'develop') {
     const document = SwaggerModule.createDocument(app, options)
     SwaggerModule.setup('api-doc', app, document)
   }
   await app.listen(configService.get(env.PORT) || 3000)
 }
+
 bootstrap();

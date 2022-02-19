@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Req, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { AppRoles } from 'src/app.roles';
 import { Auth, User } from 'src/common/decorators';
 import { User as UserEntity} from 'src/user/user.entity';
+import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
 import { LoginDto, RegisterDto } from './dtos';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -11,6 +13,7 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 export class AuthController {
 
     constructor(
+        private readonly userService: UserService,
         private readonly authService: AuthService
     ) {}
 
@@ -40,8 +43,10 @@ export class AuthController {
     
     @Auth()
     @Get('profile')
-    profile() {
-        return 'asd'
+    profile(@Request() request) {
+        const { roles, id } = request.user.data
+        if (roles === AppRoles.AUTHOR) throw new BadRequestException('Forbidden resource')
+        return this.userService.getOne(id)
     }
 
     @Auth()

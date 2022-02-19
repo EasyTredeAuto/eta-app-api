@@ -1,4 +1,5 @@
 import { ConfigService } from "@nestjs/config";
+import { AppRoles } from "src/app.roles";
 import { User } from "src/user/user.entity";
 import env from "src/utils/env";
 import { getRepository } from "typeorm";
@@ -17,8 +18,8 @@ export const setDefaultUser = async (config: ConfigService) => {
             password: config.get(env.DEFAULT_USER_PASSWORD),
             binance_api: config.get(env.DEFAULT_API_KEY),
             binance_secret_api: config.get(env.DEFAULT_SECRET_KEY),
-            roles: ["ADMIN"]
-        })
+            roles: AppRoles.ADMIN
+        }) as User
 
         return await userRepository.save(adminUser)
     }

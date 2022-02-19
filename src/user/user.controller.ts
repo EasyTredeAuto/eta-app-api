@@ -1,11 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, Param, Post, Put, Request } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { ACGuard, InjectRolesBuilder, RolesBuilder, UseRoles, UserRoles } from 'nest-access-control';
-import { AppResources } from 'src/app.roles';
-import { Auth, User } from 'src/common/decorators';
+import { AppRoles } from 'src/app.roles';
+import { Auth } from 'src/common/decorators';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
-import { User as UserEntity } from './user.entity';
 import { UserService } from './user.service';
 
 @ApiTags('User')
@@ -13,59 +11,50 @@ import { UserService } from './user.service';
 export class UserController {
 
     constructor(
-        private readonly userService: UserService,
-        @InjectRolesBuilder()
-        private readonly rolesBuilder: RolesBuilder 
+        private readonly userService: UserService
     ) {}
 
     @Auth()
     @Get()
-    getMany() {
+    async getMany(
+        @Request() request
+    ) {
+        const { roles } = request.user.data
+        if (roles !== AppRoles.ADMIN) throw new BadRequestException('Forbidden resource')
         return this.userService.getMany()
     }
 
     @Auth()
-    @Get(':id')
-    getOne(@Param('id') id:number) {
-        return this.userService.getOne(id)
-    }
-
-    @Auth({
-        possession: 'any',
-        action: 'create',
-        resource: AppResources.USER
-    })
     @Post()
-    async createOne(@Body() body:CreateUserDto) {
+    async createOne(
+        @Body() body:CreateUserDto,
+        @Request() request
+    ) {
+        const { roles } = request.user.data
+        if (roles !== AppRoles.ADMIN) throw new BadRequestException('Forbidden resource')
         return await this.userService.create(body)
     }
     
     @Auth()
-    @Put(':id')
+    @Put()
     async updateOne(
-        @Param('id') id: number,
         @Body() dto:EditUserDto,
-        // @User() user:UserEntity
-        ) {
-        // let data
-        // if (
-        //     this.rolesBuilder
-        //         .can(user.roles)
-        //         .updateAny(AppResources.USER)
-        // ) {
+        @Request() request
+    ) {
+        const { id } = request.user.data
         let data = await this.userService.update(id, dto)
-        //     console.log('user update role admin')
-        // } else {
-        //     data = await this.userService.update(id, dto)
-        //     console.log('user update role author')
-        // }
         return { message: 'User updated', data }
     }
     
     @Auth()
     @Delete(':ids')
     @ApiOperation({ summary: 'json array => "[1,2]"' })
-    deleteMany(@Param('ids') ids:string) {
+    async deleteMany(
+        @Param('ids') ids:string,
+        @Request() request
+    ) {
+        const { roles } = request.user.data
+        if (roles !== AppRoles.ADMIN) throw new BadRequestException('Forbidden resource')
         const Ids = JSON.parse(ids)
         return this.userService.deleteMany(Ids)
     }

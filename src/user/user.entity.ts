@@ -2,6 +2,7 @@ import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn,
 import { hash } from 'bcrypt'
 import { Bot } from "src/binance-bot/bot.entity";
 import { MyBot } from "src/bot-user/mybot.entity";
+import { AppRoles } from "src/app.roles";
 
 @Entity()
 export class User {
@@ -15,8 +16,10 @@ export class User {
     binance_secret_api: string
     @Column({type: 'varchar', length: 500, nullable: true, select: false})
     binance_api: string
-    @Column({ type: 'simple-array'})
-    roles: string[]
+    
+    @Column({ default: AppRoles.AUTHOR })
+    roles: string
+
     @Column({ default: true })
     active: boolean
     @CreateDateColumn({type: 'timestamp'})

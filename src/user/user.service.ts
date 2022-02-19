@@ -46,9 +46,9 @@ export class UserService {
     async create(body:CreateUserDto) {
         const userExist = await this.userRepository.findOne({where: {email:body.email}})
         if (userExist) throw new BadRequestException('User already registered with email')
-        const newUser =  await this.userRepository.create(body)
-        if (!newUser.roles) newUser.roles = ["AUTHOR"]
-        const data = await this.userRepository.save(newUser) as User
+        const user = { email: body.email, password: body.password, roles: body.roles } as User
+        const newUser =  await this.userRepository.create(user)
+        const data = await this.userRepository.save(newUser) 
         delete data.password
         return {message: "User created", data }
     }
@@ -56,7 +56,6 @@ export class UserService {
         const userExist = await this.userRepository.findOne({where: {email:body.email}})
         if (userExist) throw new BadRequestException('User already registered with email')
         const newUser =  await this.userRepository.create(body)
-        newUser.roles = ["AUTHOR"]
         const data = await this.userRepository.save(newUser)
         delete data.password
         delete data.binance_secret_api
@@ -66,7 +65,7 @@ export class UserService {
         return data
     }
     async update(id:number, body:EditUserDto) {
-        const user = await this.userRepository.findOne({where: {id: body.id}})
+        const user = await this.userRepository.findOne({where: {id}})
         if (!user) throw new BadRequestException('User does not exist')
         const editedUser = Object.assign(user, body)
         await this.userRepository.save(editedUser)

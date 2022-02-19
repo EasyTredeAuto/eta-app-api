@@ -3,7 +3,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import env from './utils/env';
 import { AccessControlModule } from 'nest-access-control';
@@ -12,9 +11,15 @@ import { BinanceCoinModule } from './binance-coin/binance-coin.module';
 import { BinanceBotModule } from './binance-bot/binance-bot.module';
 import { BotUserModule } from './bot-user/bot-user.module';
 import { PublicTradeModule } from './public-trade/public-trade.module';
+import { UserModule } from './user/user.module';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
+    AccessControlModule.forRoles(roles),
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (cs: ConfigService) => ({
@@ -29,18 +34,16 @@ import { PublicTradeModule } from './public-trade/public-trade.module';
       }),
       inject: [ConfigService],
     }),
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    AccessControlModule.forRoles(roles),
     AuthModule,
-    // UserModule,
+    UserModule,
     BinanceCoinModule,
     BinanceBotModule,
     BotUserModule,
     PublicTradeModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService
+  ],
 })
 export class AppModule {}

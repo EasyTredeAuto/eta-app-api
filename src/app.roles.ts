@@ -14,7 +14,6 @@ export const roles: RolesBuilder = new RolesBuilder()
 roles
     // AUTHOR ROLES
     .grant(AppRoles.AUTHOR)
-    .createOwn([AppResources.USER])
     .updateOwn([AppResources.USER])
     .deleteOwn([AppResources.USER])
 
