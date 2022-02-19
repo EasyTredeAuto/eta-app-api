@@ -34,7 +34,7 @@ import { PublicTradeModule } from './public-trade/public-trade.module';
     }),
     AccessControlModule.forRoles(roles),
     AuthModule,
-    UserModule,
+    // UserModule,
     BinanceCoinModule,
     BinanceBotModule,
     BotUserModule,

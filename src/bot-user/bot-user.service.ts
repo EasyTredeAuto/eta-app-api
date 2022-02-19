@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import { payloadBotReq } from './dtos/create-bot-user-dto';
 import { JwtService } from '@nestjs/jwt';
@@ -25,6 +25,7 @@ export class BotUserService {
         amountType: body.amountType, 
         user: user
       } as MyBot
+      if (!bot.user)  throw new NotFoundException("can't build token, is query failed")
       const data = await this.myBotRepository.create(bot)
       const newBot = await this.myBotRepository.save(data)
       delete newBot.createdAt

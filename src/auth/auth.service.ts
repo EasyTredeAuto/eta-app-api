@@ -13,10 +13,11 @@ export class AuthService {
     ) {}
     
     async register(user: RegisterDto){
-        const newUser = await this.userService.register(user)
+        const newUser = await this.userService.register({email: user.email, password: user.password})
         const { id, ...rest } = newUser
         const payload = { sub: id }
-
+        delete newUser.id
+        
         return {
             user:newUser,
             accessToken: this.jwtService.sign(payload)
