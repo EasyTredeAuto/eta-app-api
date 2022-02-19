@@ -1,11 +1,11 @@
-import { BadRequestException, Body, Controller, Get, Post, Req, Request, UseGuards } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AppRoles } from 'src/app.roles';
 import { Auth, User } from 'src/common/decorators';
 import { User as UserEntity} from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { AuthService } from './auth.service';
-import { LoginDto, RegisterDto } from './dtos';
+import { RegisterDto } from './dtos';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 
 @ApiTags('Auth')
@@ -17,11 +17,12 @@ export class AuthController {
         private readonly authService: AuthService
     ) {}
 
+
+
     @UseGuards(LocalAuthGuard)
     @Post('login')
     async login(
-        @Body() loginDto: LoginDto,
-        @User() user: UserEntity
+        @User() user: UserEntity,
     ) {
         const data = await this.authService.login(user)
         return {
