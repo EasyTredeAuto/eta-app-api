@@ -16,7 +16,6 @@ export class AuthService {
         const newUser = await this.userService.register({email: user.email, password: user.password})
         const { id, ...rest } = newUser
         const payload = { sub: id }
-        delete newUser.id
         
         return {
             user:newUser,
