@@ -1,17 +1,25 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from 'src/common/decorators';
+import { UserService } from 'src/user/user.service';
 import { BinanceBotService } from './binance-bot.service';
 import { CreateBotDto } from './dtos/create-bot.dto';
 import { UpdateBotDto } from './dtos/update-bot.dto';
 
-@ApiTags('Bot')
+@ApiTags('binance-bot')
 @Controller('binance-bot')
 export class BinanceBotController {
     constructor(
-        private readonly botService: BinanceBotService
+        private readonly botService: BinanceBotService,
+        private readonly userService: UserService,
     ){}
 
+    @Auth()
+    @Get('/:userId')
+    async findAllById(@Param('userId') userId:number) {
+        return await this.botService.findAll(userId)
+    }
+    
     @Auth()
     @Get('/:userId')
     async findAll(@Param('userId') userId:number) {
@@ -19,9 +27,12 @@ export class BinanceBotController {
     }
 
     @Auth()
-    @Post()
-    async createOne(@Body() body:CreateBotDto) {
-        return await this.botService.create(body)
+    @Post('/:userId')
+    async createOne(
+        @Param('userId') userId:number,
+        @Body() body:CreateBotDto
+    ) {
+        return await this.botService.create(userId, body)
     }
     
     @Auth()

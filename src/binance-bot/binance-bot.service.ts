@@ -16,10 +16,11 @@ export class BinanceBotService {
         const data = await this.botRepository.find({where: {id}})
         return {message: "this is your all bots", data }
     }
-    async create(body:CreateBotDto) {
-        const botExist = await this.botRepository.findOne({where: {name: body.name, userId: body.userId}})
+    async create(user, body:CreateBotDto) {
+        const botExist = await this.botRepository.findOne({where: {name: body.name, user}})
         if (botExist) throw new BadRequestException('Bot already registered with name')
-        const newBot =  await this.botRepository.create(body)
+        const bot = {name: body.name, asset: body.asset, currency: body.currency, timeFleam: body.timeFleam, amount: body.amount, amountType: body.amountType, user} as Bot
+        const newBot =  await this.botRepository.create(bot)
         const data = await this.botRepository.save(newBot) as Bot
         return {message: "Bot created", data }
     }

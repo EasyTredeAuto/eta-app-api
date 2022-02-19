@@ -3,6 +3,7 @@ export default {
     PORT: "PORT",
     JWT_SECRET_KEY: "JWT_SECRET_KEY",
     SECRET_KEY:"SECRET_KEY",
+    SERVER_PROD:'SERVER_PROD',
 
     // mysql connect
     MYSQL_DB_NAME:"MYSQL_DB_NAME",

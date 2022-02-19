@@ -13,6 +13,4 @@ export class CreateBotDto {
     amount: number
     @IsString()
     amountType: string
-    @IsNumber()
-    userId: number
 }

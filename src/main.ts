@@ -18,9 +18,10 @@ async function bootstrap() {
     .build()
     setDefaultUser(configService)
 
-  const document = SwaggerModule.createDocument(app, options)
-  SwaggerModule.setup('api-doc', app, document)
-
+  if (configService.get(env.SERVER_PROD) === 'develop') {
+    const document = SwaggerModule.createDocument(app, options)
+    SwaggerModule.setup('api-doc', app, document)
+  }
   await app.listen(configService.get(env.PORT) || 3000)
 }
 bootstrap();
