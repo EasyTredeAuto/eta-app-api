@@ -38,13 +38,22 @@ export class PublicTradeController {
     if (!bot) throw new NotFoundException('Bot does not exists')
     let res
     if (result.side === 'buy' && result.type === 'limit')
-      res = await this.botBinanceTradeService.createOrderBuyLimit(result)
+      res = await this.botBinanceTradeService.createOrderBuyLimit(result, bot.user)
     if (result.side === 'sell' && result.type === 'limit')
-      res = await this.botBinanceTradeService.createOrderSellLimit(result)
+      res = await this.botBinanceTradeService.createOrderSellLimit(
+        result,
+        bot.user,
+      )
     if (result.side === 'buy' && result.type === 'market')
-      res = await this.botBinanceTradeService.createOrderBuyMarket(result)
+      res = await this.botBinanceTradeService.createOrderBuyMarket(
+        result,
+        bot.user,
+      )
     if (result.side === 'sell' && result.type === 'market')
-      res = await this.botBinanceTradeService.createOrderSellMarket(result)
+      res = await this.botBinanceTradeService.createOrderSellMarket(
+        result,
+        bot.user,
+      )
     return { message: 'bot trade success', data: res }
   }
 }

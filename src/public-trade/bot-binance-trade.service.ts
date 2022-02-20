@@ -24,7 +24,7 @@ export class BotBinanceTradeService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async createOrderBuyLimit(body) {
+  async createOrderBuyLimit(body, id) {
     const { asset, currency, email, amount, amountType } = body
     let isAmount
     const symbol = `${asset}${currency}`
@@ -50,13 +50,14 @@ export class BotBinanceTradeService {
       bot: body.botId,
       side: 'buy',
       type: order.type,
+      user: id,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
     return newTransaction
   }
 
-  async createOrderSellLimit(body) {
+  async createOrderSellLimit(body, id) {
     const { asset, currency, email, amount, amountType } = body
     const symbol = `${asset}${currency}`
     let isAmount
@@ -82,13 +83,14 @@ export class BotBinanceTradeService {
       bot: body.botId,
       side: 'sell',
       type: order.type,
+      user: id,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
     return newTransaction
   }
 
-  async createOrderBuyMarket(body) {
+  async createOrderBuyMarket(body, id) {
     const { asset, currency, email, amount, amountType } = body
     const symbol = `${asset}${currency}`
     let isAmount
@@ -114,13 +116,14 @@ export class BotBinanceTradeService {
       bot: body.botId,
       side: 'buy',
       type: order.type,
+      user: id,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
     return newTransaction
   }
 
-  async createOrderSellMarket(body) {
+  async createOrderSellMarket(body, id) {
     const { asset, currency, email, amount, amountType } = body
     const symbol = `${asset}${currency}`
     let isAmount
@@ -146,6 +149,7 @@ export class BotBinanceTradeService {
       bot: body.botId,
       side: 'sell',
       type: order.type,
+      user: id,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
