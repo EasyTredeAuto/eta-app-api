@@ -24,8 +24,8 @@ export class BotBinanceTradeService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async createOrderBuyLimit(body, id) {
-    const { asset, currency, email, amount, amountType, symbol } = body
+  async createOrderBuyLimit(body) {
+    const { id, currency, email, amount, amountType, symbol } = body
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -56,8 +56,8 @@ export class BotBinanceTradeService {
     return newTransaction
   }
 
-  async createOrderSellLimit(body, id) {
-    const { asset, currency, email, amount, amountType, symbol } = body
+  async createOrderSellLimit(body) {
+    const { asset, currency, email, amount, amountType, symbol, id } = body
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -88,8 +88,8 @@ export class BotBinanceTradeService {
     return newTransaction
   }
 
-  async createOrderBuyMarket(body, id) {
-    const { asset, currency, email, amount, amountType, symbol } = body
+  async createOrderBuyMarket(body) {
+    const { asset, currency, email, amount, amountType, symbol, id } = body
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -120,8 +120,8 @@ export class BotBinanceTradeService {
     return newTransaction
   }
 
-  async createOrderSellMarket(body, id) {
-    const { asset, currency, email, amount, amountType, symbol } = body
+  async createOrderSellMarket(body) {
+    const { asset, currency, email, amount, amountType, symbol, id } = body
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)

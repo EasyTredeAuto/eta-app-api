@@ -43,7 +43,7 @@ export class BinanceCoinService {
   }
   async getCoinList() {
     const coins = await this.ajax.get('/ticker/bookTicker')
-    if (!coins.data) {
+    if (!coins) {
       throw new BadRequestException('fetch coins failed')
     }
     return coins
