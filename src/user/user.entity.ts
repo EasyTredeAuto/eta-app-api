@@ -15,6 +15,7 @@ import { hash } from 'bcrypt'
 import { Bot } from 'src/binance-bot/bot.entity'
 import { MyBot } from 'src/bot-user/mybot.entity'
 import { AppRoles } from 'src/app.roles'
+import { Transaction } from 'src/public-trade/transaction-mybot.entity'
 
 @Entity()
 export class User {
@@ -55,9 +56,15 @@ export class User {
   @JoinColumn()
   myBot: MyBot
 
+  @JoinColumn()
+  transaction: MyBot
+
   @OneToMany(() => Bot, (bot: Bot) => bot.id)
   bots: Bot[]
 
   @OneToMany(() => MyBot, (bot: MyBot) => bot.id)
   myBots: MyBot[]
+
+  @OneToMany(() => Transaction, (transaction: Transaction) => transaction.id)
+  transactions: Transaction[]
 }

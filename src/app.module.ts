@@ -13,6 +13,7 @@ import { BotUserModule } from './bot-user/bot-user.module'
 import { PublicTradeModule } from './public-trade/public-trade.module'
 import { UserModule } from './user/user.module'
 import { APP_GUARD } from '@nestjs/core'
+import { TransactionModule } from './transaction/transaction.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { APP_GUARD } from '@nestjs/core'
     BinanceBotModule,
     BotUserModule,
     PublicTradeModule,
+    TransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

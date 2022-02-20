@@ -1,3 +1,4 @@
+import { User } from 'src/user/user.entity'
 import {
   Column,
   CreateDateColumn,
@@ -31,4 +32,7 @@ export class Transaction {
 
   @ManyToOne(() => MyBot, (myBot: MyBot) => myBot.transactions)
   bot: MyBot
+
+  @ManyToOne(() => User, (user: User) => user.transactions)
+  user: User
 }
