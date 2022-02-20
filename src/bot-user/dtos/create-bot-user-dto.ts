@@ -6,9 +6,7 @@ export class payloadBotReq {
   @IsString()
   name
   @IsString()
-  asset: string
-  @IsString()
-  currency: string
+  symbol: string
   @IsNumber()
   amount: number
   @IsString()

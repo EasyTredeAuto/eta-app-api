@@ -41,10 +41,11 @@ export class BotUserController {
     if (
       !body ||
       !body.name ||
-      !body.asset ||
-      !body.currency ||
+      !body.symbol ||
       !body.amount ||
-      !body.amountType
+      !body.amountType ||
+      !body.side ||
+      !body.type
     )
       throw new BadRequestException("can't build token, is query failed")
     const user = await this.userService.findOne({

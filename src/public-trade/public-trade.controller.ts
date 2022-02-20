@@ -28,8 +28,7 @@ export class PublicTradeController {
       !result ||
       !result.botId ||
       !result.name ||
-      !result.asset ||
-      !result.currency ||
+      !result.symbol ||
       !result.amount ||
       !result.amountType
     )
@@ -38,7 +37,10 @@ export class PublicTradeController {
     if (!bot) throw new NotFoundException('Bot does not exists')
     let res
     if (result.side === 'buy' && result.type === 'limit')
-      res = await this.botBinanceTradeService.createOrderBuyLimit(result, bot.user)
+      res = await this.botBinanceTradeService.createOrderBuyLimit(
+        result,
+        bot.user,
+      )
     if (result.side === 'sell' && result.type === 'limit')
       res = await this.botBinanceTradeService.createOrderSellLimit(
         result,

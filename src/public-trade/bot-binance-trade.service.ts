@@ -25,9 +25,8 @@ export class BotBinanceTradeService {
   ) {}
 
   async createOrderBuyLimit(body, id) {
-    const { asset, currency, email, amount, amountType } = body
+    const { asset, currency, email, amount, amountType, symbol } = body
     let isAmount
-    const symbol = `${asset}${currency}`
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
     const price = parseFloat(market.price) - 50
@@ -58,8 +57,7 @@ export class BotBinanceTradeService {
   }
 
   async createOrderSellLimit(body, id) {
-    const { asset, currency, email, amount, amountType } = body
-    const symbol = `${asset}${currency}`
+    const { asset, currency, email, amount, amountType, symbol } = body
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -91,8 +89,7 @@ export class BotBinanceTradeService {
   }
 
   async createOrderBuyMarket(body, id) {
-    const { asset, currency, email, amount, amountType } = body
-    const symbol = `${asset}${currency}`
+    const { asset, currency, email, amount, amountType, symbol } = body
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -124,8 +121,7 @@ export class BotBinanceTradeService {
   }
 
   async createOrderSellMarket(body, id) {
-    const { asset, currency, email, amount, amountType } = body
-    const symbol = `${asset}${currency}`
+    const { asset, currency, email, amount, amountType, symbol } = body
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -160,8 +156,7 @@ export class BotBinanceTradeService {
     const user = await this.userService.findOne({ id })
     const bot = {
       name: body.name,
-      asset: body.asset,
-      currency: body.currency,
+      symbol: body.symbol,
       amount: body.amount,
       amountType: body.amountType,
       user: user,
