@@ -22,6 +22,8 @@ export class Transaction {
   price: number
   @Column()
   side: string
+  @Column()
+  type: string
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
   @UpdateDateColumn({ type: 'timestamp' })

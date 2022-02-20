@@ -2,7 +2,7 @@ import { IsNumber, IsString } from 'class-validator'
 
 export class payloadBotDe {
   @IsNumber()
-  id: number
+  botId: number
   @IsString()
   email
   @IsString()

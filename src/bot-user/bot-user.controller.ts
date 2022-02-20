@@ -1,28 +1,70 @@
-import { Controller, Delete, Get, Param } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+  Request,
+} from '@nestjs/common'
 import { BotUserService } from './bot-user.service'
 import { ApiTags } from '@nestjs/swagger'
 import { Auth } from 'src/common/decorators'
+import { payloadBotReq } from './dtos/create-bot-user-dto'
+import { UserService } from 'src/user/user.service'
+import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 
-@ApiTags('Manage bot')
+@ApiTags('My bot')
 @Controller('bot-user')
 export class BotUserController {
-  constructor(private readonly botUserService: BotUserService) {}
+  constructor(
+    private readonly botBinanceTradeService: BotBinanceTradeService,
+    private readonly botUserService: BotUserService,
+    private readonly userService: UserService,
+  ) {}
 
   @Auth()
-  @Get('/:userId')
-  async findAll(@Param('userId') userId: number) {
-    const allBot = await this.botUserService.findAll(userId)
+  @Get()
+  async findAll(@Request() request) {
+    const { id } = request.user.data
+    const allBot = await this.botUserService.findAll(id)
     return { message: 'this is all bot', data: allBot }
   }
 
   @Auth()
-  @Delete('/:userId/:botId')
-  async deleteBot(
-    @Param('userId') userId: number,
-    @Param('botId') botId: number,
-  ) {
+  @Post()
+  async createTokenBot(@Body() body: payloadBotReq, @Request() request) {
+    const { id, email } = request.user.data
+    if (!id || !body.email) throw new NotFoundException('User does not exists')
+    if (
+      !body ||
+      !body.name ||
+      !body.asset ||
+      !body.currency ||
+      !body.amount ||
+      !body.amountType
+    )
+      throw new BadRequestException("can't build token, is query failed")
+    const user = await this.userService.findOne({
+      id,
+      email,
+    })
+    if (!user) throw new NotFoundException('User does not exists')
+    const urlBot = await this.botBinanceTradeService.createBotToken(
+      user.id,
+      body,
+    )
+    return { message: 'create bot success', url: urlBot }
+  }
+
+  @Auth()
+  @Delete('/:botId')
+  async deleteBot(@Param('botId') botId: number, @Request() request) {
+    const { id } = request.user.data
     await this.botUserService.deleteBot(botId)
-    const allBot = await this.botUserService.findAll(userId)
+    const allBot = await this.botUserService.findAll(id)
     return { message: 'bot deleted', data: allBot }
   }
 }
