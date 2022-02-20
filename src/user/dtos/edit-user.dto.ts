@@ -1,19 +1,18 @@
-import { IsBoolean, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsNumber, IsString } from 'class-validator'
 
-export class EditUserDto  {
+export class EditUserDto {
+  @IsNumber()
+  id: number
 
-    @IsNumber()
-    id: number
+  @IsString()
+  binance_secret_api: string
 
-    @IsString()
-    binance_secret_api: string
+  @IsString()
+  binance_api: string
 
-    @IsString()
-    binance_api: string
+  @IsString()
+  roles: string[]
 
-    @IsString()
-    roles: string[]
-
-    @IsBoolean()
-    active:boolean
+  @IsBoolean()
+  active: boolean
 }

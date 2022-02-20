@@ -1,16 +1,16 @@
-import { IsNumber, IsString } from "class-validator";
+import { IsNumber, IsString } from 'class-validator'
 
 export class CreateBotDto {
-    @IsString()
-    name: string
-    @IsString()
-    asset: string
-    @IsString()
-    currency: string
-    @IsString()
-    timeFleam: string
-    @IsNumber()
-    amount: number
-    @IsString()
-    amountType: string
+  @IsString()
+  name: string
+  @IsString()
+  asset: string
+  @IsString()
+  currency: string
+  @IsString()
+  timeFleam: string
+  @IsNumber()
+  amount: number
+  @IsString()
+  amountType: string
 }
