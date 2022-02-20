@@ -4,11 +4,13 @@ export class payloadBotDe {
   @IsNumber()
   botId: number
   @IsString()
-  email
+  email: string
   @IsString()
-  name
+  name: string
   @IsString()
-  symbol: string
+  asset: string
+  @IsString()
+  currency: string
   @IsNumber()
   amount: number
   @IsString()

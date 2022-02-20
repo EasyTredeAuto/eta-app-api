@@ -2,11 +2,13 @@ import { IsNumber, IsString } from 'class-validator'
 
 export class payloadBotReq {
   @IsString()
-  email
+  email: string
   @IsString()
-  name
+  name: string
   @IsString()
-  symbol: string
+  asset: string
+  @IsString()
+  currency: string
   @IsNumber()
   amount: number
   @IsString()

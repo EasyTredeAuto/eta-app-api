@@ -28,7 +28,8 @@ export class PublicTradeController {
       !result ||
       !result.botId ||
       !result.name ||
-      !result.symbol ||
+      !result.asset ||
+      !result.currency ||
       !result.amount ||
       !result.amountType
     )

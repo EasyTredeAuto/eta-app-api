@@ -25,7 +25,8 @@ export class BotBinanceTradeService {
   ) {}
 
   async createOrderBuyLimit(body) {
-    const { id, currency, email, amount, amountType, symbol } = body
+    const { id, asset, currency, email, amount, amountType } = body
+    const symbol = `${asset}${currency}`
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -57,7 +58,8 @@ export class BotBinanceTradeService {
   }
 
   async createOrderSellLimit(body) {
-    const { asset, currency, email, amount, amountType, symbol, id } = body
+    const { asset, currency, email, amount, amountType, id } = body
+    const symbol = `${asset}${currency}`
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -89,7 +91,8 @@ export class BotBinanceTradeService {
   }
 
   async createOrderBuyMarket(body) {
-    const { asset, currency, email, amount, amountType, symbol, id } = body
+    const { asset, currency, email, amount, amountType, id } = body
+    const symbol = `${asset}${currency}`
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -121,7 +124,8 @@ export class BotBinanceTradeService {
   }
 
   async createOrderSellMarket(body) {
-    const { asset, currency, email, amount, amountType, symbol, id } = body
+    const { asset, currency, email, amount, amountType, id } = body
+    const symbol = `${asset}${currency}`
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
@@ -156,7 +160,7 @@ export class BotBinanceTradeService {
     const user = await this.userService.findOne({ id })
     const bot = {
       name: body.name,
-      symbol: body.symbol,
+      symbol: body.asset + body.currency,
       amount: body.amount,
       amountType: body.amountType,
       user: user,

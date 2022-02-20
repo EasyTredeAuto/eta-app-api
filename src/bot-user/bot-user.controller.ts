@@ -41,7 +41,8 @@ export class BotUserController {
     if (
       !body ||
       !body.name ||
-      !body.symbol ||
+      !body.asset ||
+      !body.currency ||
       !body.amount ||
       !body.amountType ||
       !body.side ||
