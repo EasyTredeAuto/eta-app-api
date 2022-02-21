@@ -55,6 +55,12 @@ export class BinanceCoinService {
     }
     return coinsPrice
   }
+  async getCoinAsset(email) {
+    const exchange = await this._getExchangeInstance(email)
+    const result = await exchange.fetchBalance()
+    const filteredObject = Object.keys(result.used)
+    return filteredObject
+  }
   async getListCoinPrice(symbol) {
     const coinsPrice = await this.ajax.get(`/ticker/price?symbol=${symbol}`)
     if (!coinsPrice) {
@@ -73,7 +79,7 @@ export class BinanceCoinService {
     delete result.info.permissions
     const balance = {
       info: result.info,
-      total: filteredObject,
+      total: filteredObject
     }
     return balance
   }

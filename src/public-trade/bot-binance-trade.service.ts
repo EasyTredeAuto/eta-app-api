@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import { payloadBotReq } from 'src/bot-user/dtos/create-bot-user-dto'
+import { payloadBotDe } from 'src/bot-user/dtos/decode-payload.dto'
 import { MyBot } from 'src/bot-user/mybot.entity'
 import { UserService } from 'src/user/user.service'
 import { Repository } from 'typeorm'
@@ -178,10 +179,14 @@ export class BotBinanceTradeService {
     )
     const token = this.jwtService.sign(payload)
     const url = `http://localhost:8000/public-trade/order?token=${token}`
+    await this.myBotRepository.update({ id: newBot.id }, { url })
     return url
   }
 
   async decodeBotToken(token: string) {
-    return this.jwtService.decode(token)
+    const result = this.jwtService.decode(token) as payloadBotDe
+    const data = await this.myBotRepository.findOne({ id: result.botId }) 
+    if (!data.active) throw new BadRequestException('bot does not active') 
+    return result
   }
 }

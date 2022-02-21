@@ -37,7 +37,7 @@ export class BotUserController {
   @Post()
   async createTokenBot(@Body() body: payloadBotReq, @Request() request) {
     const { id, email } = request.user.data
-    if (!id || !body.email) throw new NotFoundException('User does not exists')
+    if (!id) throw new NotFoundException('User does not exists')
     if (
       !body ||
       !body.name ||

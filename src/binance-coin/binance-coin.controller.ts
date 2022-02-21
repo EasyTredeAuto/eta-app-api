@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Query,
+  Request,
 } from '@nestjs/common'
 import { ApiQuery, ApiTags } from '@nestjs/swagger'
 import { Auth } from 'src/common/decorators'
@@ -39,17 +40,24 @@ export class BinanceCoinController {
       return await this.binanceCoinService.getListCoinPrice(symbol)
     }
   }
-
+  @Auth()
+  @Get('/coins/asset')
+  async coinsAsset(@Request() request) {
+    const { email } = request.user.data
+    return await this.binanceCoinService.getCoinAsset(email)
+  }
   @Auth()
   @Get('/spot/balance')
-  async freeBalance(@Query('email') email: string) {
+  async freeBalance(@Request() request) {
+    const { email } = request.user.data
     if (!email) throw new BadRequestException('email is valid')
     return await this.binanceCoinService.freeBalance(email)
   }
 
   @Auth()
   @Get('/spot/orders')
-  async orders(@Query('email') email: string, @Query('symbol') symbol: string) {
+  async orders(@Request() request, @Query('symbol') symbol: string) {
+    const { email } = request.user.data
     if (!symbol) throw new BadRequestException('symbol is valid')
     return await this.binanceCoinService.orders(email, symbol)
   }
@@ -58,25 +66,25 @@ export class BinanceCoinController {
   @Delete('/spot/order/:orderid')
   async cancelOrder(
     @Param('orderid') orderid: string,
-    @Query('email') email: string,
+    @Request() request,
     @Query('symbol') symbol: string,
   ) {
+    const { email } = request.user.data
     if (!symbol) throw new BadRequestException('symbol is valid')
     return await this.binanceCoinService.cancelOrderId(email, symbol, orderid)
   }
 
   @Auth()
   @Delete('/spot/orders')
-  async cancelOrders(
-    @Query('email') email: string,
-    @Query('symbol') symbol: string,
-  ) {
+  async cancelOrders(@Request() request, @Query('symbol') symbol: string) {
+    const { email } = request.user.data
     return await this.binanceCoinService.cancelOrders(email, symbol)
   }
 
   @Auth()
   @Post('/spot/buy')
-  async buy(@Query('email') email: string, @Query('symbol') symbol: string) {
+  async buy(@Request() request, @Query('symbol') symbol: string) {
+    const { email } = request.user.data
     if (!symbol) throw new BadRequestException('symbol is valid')
     return await this.binanceCoinService.createLimitBuyOrder(
       email,
@@ -88,7 +96,8 @@ export class BinanceCoinController {
 
   @Auth()
   @Post('/spot/sell')
-  async sell(@Query('email') email: string, @Query('symbol') symbol: string) {
+  async sell(@Request() request, @Query('symbol') symbol: string) {
+    const { email } = request.user.data
     if (!symbol) throw new BadRequestException('symbol is valid')
     return await this.binanceCoinService.createLimitSellOrder(
       email,
@@ -100,10 +109,8 @@ export class BinanceCoinController {
 
   @Auth()
   @Post('/spot/buy/market')
-  async buyMarket(
-    @Query('email') email: string,
-    @Query('symbol') symbol: string,
-  ) {
+  async buyMarket(@Request() request, @Query('symbol') symbol: string) {
+    const { email } = request.user.data
     if (!symbol) throw new BadRequestException('symbol is valid')
     return await this.binanceCoinService.createMarketOrder(
       email,
@@ -115,10 +122,8 @@ export class BinanceCoinController {
 
   @Auth()
   @Post('/spot/sell/market')
-  async sellMarket(
-    @Query('email') email: string,
-    @Query('symbol') symbol: string,
-  ) {
+  async sellMarket(@Request() request, @Query('symbol') symbol: string) {
+    const { email } = request.user.data
     if (!symbol) throw new BadRequestException('symbol is valid')
     return await this.binanceCoinService.createMarketOrder(
       email,
