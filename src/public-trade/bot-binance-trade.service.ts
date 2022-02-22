@@ -25,6 +25,15 @@ export class BotBinanceTradeService {
     private readonly jwtService: JwtService,
   ) {}
 
+  async roundUpdate(id: number) {
+    await this.myBotRepository
+      .createQueryBuilder()
+      .update('my_bot')
+      .set({ round: () => `round + 1` })
+      .where('id = :id', { id })
+      .execute()
+  }
+
   async createOrderBuyLimit(body) {
     const { id, asset, currency, email, amount, amountType } = body
     const symbol = `${asset}${currency}`
@@ -55,6 +64,7 @@ export class BotBinanceTradeService {
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
+    await this.roundUpdate(body.botId)
     return newTransaction
   }
 
@@ -88,6 +98,7 @@ export class BotBinanceTradeService {
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
+    await this.roundUpdate(body.botId)
     return newTransaction
   }
 
@@ -121,6 +132,7 @@ export class BotBinanceTradeService {
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
+    await this.roundUpdate(body.botId)
     return newTransaction
   }
 
@@ -154,6 +166,7 @@ export class BotBinanceTradeService {
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
+    await this.roundUpdate(body.botId)
     return newTransaction
   }
 
@@ -164,6 +177,8 @@ export class BotBinanceTradeService {
       symbol: body.asset + body.currency,
       amount: body.amount,
       amountType: body.amountType,
+      side: body.side,
+      type: body.type,
       user: user,
     } as MyBot
     if (!bot.user)
@@ -185,8 +200,8 @@ export class BotBinanceTradeService {
 
   async decodeBotToken(token: string) {
     const result = this.jwtService.decode(token) as payloadBotDe
-    const data = await this.myBotRepository.findOne({ id: result.botId }) 
-    if (!data.active) throw new BadRequestException('bot does not active') 
+    const data = await this.myBotRepository.findOne({ id: result.botId })
+    if (!data.active) throw new BadRequestException('bot does not active')
     return result
   }
 }

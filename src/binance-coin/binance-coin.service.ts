@@ -79,7 +79,7 @@ export class BinanceCoinService {
     delete result.info.permissions
     const balance = {
       info: result.info,
-      total: filteredObject
+      total: filteredObject,
     }
     return balance
   }
@@ -106,7 +106,12 @@ export class BinanceCoinService {
     price: number,
   ) {
     const exchange = await this._getExchangeInstance(email)
-    const result = await exchange.createLimitBuyOrder(symbol, amount, price)
+    const result = await exchange
+      .createLimitBuyOrder(symbol, amount, price)
+      .then((result) => result)
+      .catch((err) => {
+        throw new BadRequestException(`failed width ${err.message}`)
+      })
     return result
   }
   async createLimitSellOrder(

@@ -24,13 +24,16 @@ export class MyBot {
   amount: number
   @Column()
   amountType: string
-
-  @Column({ type: 'varchar', length: 400, nullable: true })
+  @Column()
+  side: string
+  @Column()
+  type: string
+  @Column({ type: 'varchar', length: 500, nullable: true })
   url: string
-
-  @Column({default: true})
+  @Column({ default: 0 })
+  round: number
+  @Column({ default: true })
   active: boolean
-
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
   @UpdateDateColumn({ type: 'timestamp' })
