@@ -26,11 +26,15 @@ export class BotUserController {
   ) {}
 
   @Auth()
-  @Get()
-  async findAll(@Request() request) {
+  @Get('/:page/:size')
+  async findAll(
+    @Param('page') page: number,
+    @Param('size') size: number,
+    @Request() request,
+  ) {
     const { id } = request.user.data
-    const allBot = await this.botUserService.findAll(id)
-    return { message: 'this is all bot', data: allBot }
+    const allBot = await this.botUserService.findAllAndCount({ user: id }, page, size)
+    return { message: 'this is all bot', ...allBot }
   }
 
   @Auth()
