@@ -20,6 +20,10 @@ export class MyBot {
   name: string
   @Column({ type: 'varchar', length: 10 })
   symbol: string
+  @Column({ type: 'varchar', length: 10 })
+  asset: string
+  @Column({ type: 'varchar', length: 10 })
+  currency: string
   @Column()
   amount: number
   @Column()

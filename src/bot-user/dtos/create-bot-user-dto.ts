@@ -18,3 +18,22 @@ export class payloadBotReq {
   @IsString()
   type: string
 }
+
+export class payloadBotUpdateReq {
+  @IsNumber()
+  id: number
+  @IsString()
+  name: string
+  @IsString()
+  asset: string
+  @IsString()
+  currency: string
+  @IsNumber()
+  amount: number
+  @IsString()
+  amountType: string
+  @IsString()
+  side: string
+  @IsString()
+  type: string
+}

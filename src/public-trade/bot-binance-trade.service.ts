@@ -6,7 +6,10 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
-import { payloadBotReq } from 'src/bot-user/dtos/create-bot-user-dto'
+import {
+  payloadBotReq,
+  payloadBotUpdateReq,
+} from 'src/bot-user/dtos/create-bot-user-dto'
 import { payloadBotDe } from 'src/bot-user/dtos/decode-payload.dto'
 import { MyBot } from 'src/bot-user/mybot.entity'
 import { UserService } from 'src/user/user.service'
@@ -180,6 +183,8 @@ export class BotBinanceTradeService {
       side: body.side,
       type: body.type,
       user: user,
+      asset: body.asset,
+      currency: body.currency,
     } as MyBot
     if (!bot.user)
       throw new NotFoundException("can't build token, is query failed")
@@ -198,10 +203,42 @@ export class BotBinanceTradeService {
     return url
   }
 
+  async updateBotToken(id: number, body: payloadBotUpdateReq) {
+    console.log(id, body)
+    const user = await this.userService.findOne({ id })
+    if (!user.id)
+      throw new NotFoundException("can't build token, is query failed")
+    const payload = await Object.assign(
+      { id: user.id, email: user.email, botId: body.id },
+      body,
+    )
+    const token = this.jwtService.sign(payload)
+    const url = `http://localhost:8000/public-trade/order?token=${token}`
+    const bot = {
+      name: body.name,
+      symbol: body.asset + body.currency,
+      amount: body.amount,
+      amountType: body.amountType,
+      side: body.side,
+      type: body.type,
+      user: user,
+      asset: body.asset,
+      currency: body.currency,
+      url,
+    } as MyBot
+    await this.myBotRepository.update({ id: body.id }, bot)
+    const thisBot = await this.myBotRepository.findOne({ id: body.id })
+    delete thisBot.createdAt
+    delete thisBot.deletedAt
+    delete thisBot.updatedAt
+    return url
+  }
+
   async decodeBotToken(token: string) {
     const result = this.jwtService.decode(token) as payloadBotDe
     const data = await this.myBotRepository.findOne({ id: result.botId })
-    if (!data.active) throw new BadRequestException('bot does not active')
+    if (!data || !data.active)
+      throw new BadRequestException('bot does not active')
     return result
   }
 }

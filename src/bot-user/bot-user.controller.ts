@@ -7,12 +7,13 @@ import {
   NotFoundException,
   Param,
   Post,
+  Put,
   Request,
 } from '@nestjs/common'
 import { BotUserService } from './bot-user.service'
 import { ApiTags } from '@nestjs/swagger'
 import { Auth } from 'src/common/decorators'
-import { payloadBotReq } from './dtos/create-bot-user-dto'
+import { payloadBotReq, payloadBotUpdateReq } from './dtos/create-bot-user-dto'
 import { UserService } from 'src/user/user.service'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 
@@ -33,7 +34,11 @@ export class BotUserController {
     @Request() request,
   ) {
     const { id } = request.user.data
-    const allBot = await this.botUserService.findAllAndCount({ user: id }, page, size)
+    const allBot = await this.botUserService.findAllAndCount(
+      { user: id },
+      page,
+      size,
+    )
     return { message: 'this is all bot', ...allBot }
   }
 
@@ -63,6 +68,35 @@ export class BotUserController {
       body,
     )
     return { message: 'create bot success', url: urlBot }
+  }
+
+  @Auth()
+  @Put()
+  async updateTokenBot(@Body() body: payloadBotUpdateReq, @Request() request) {
+    console.log(body)
+    const { id, email } = request.user.data
+    if (!id) throw new NotFoundException('User does not exists')
+    if (
+      !body ||
+      !body.name ||
+      !body.asset ||
+      !body.currency ||
+      !body.amount ||
+      !body.amountType ||
+      !body.side ||
+      !body.type
+    )
+      throw new BadRequestException("can't build token, is query failed")
+    const user = await this.userService.findOne({
+      id,
+      email,
+    })
+    if (!user) throw new NotFoundException('User does not exists')
+    const urlBot = await this.botBinanceTradeService.updateBotToken(
+      user.id,
+      body,
+    )
+    return { message: 'update bot success', url: urlBot }
   }
 
   @Auth()
