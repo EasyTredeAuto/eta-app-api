@@ -101,9 +101,9 @@ export class BotUserController {
 
   @Auth()
   @Delete('/:orderId')
-  async deleteBot(@Param('botId') botId: number, @Request() request) {
+  async deleteBot(@Param('orderId') orderId: number, @Request() request) {
     const { id } = request.user.data
-    await this.botUserService.deleteBot(botId)
+    await this.botUserService.deleteBot(orderId)
     const allBot = await this.botUserService.findAll(id)
     return { message: 'bot deleted', data: allBot }
   }
