@@ -6,6 +6,7 @@ import {
 import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
+import { payloadOrderReq } from 'src/manage-order-admin/dtos/payloadOrderReq.dtos'
 import {
   payloadBotReq,
   payloadBotUpdateReq,
@@ -239,5 +240,11 @@ export class BotBinanceTradeService {
     if (!data || !data.active)
       throw new BadRequestException('bot does not active')
     return result
+  }
+
+  // admin only ===============================================================================
+
+  async createAdminOrder(userId: number, body: payloadOrderReq) {
+    
   }
 }
