@@ -249,28 +249,40 @@ export class BotBinanceTradeService {
 
   async createAdminOrder(userId: number, body: payloadOrderReq) {
     const user = await this.userService.findOne({ id: userId })
-    const bot = {
+    const order = {
+      user: user,
       name: body.name,
       symbol: body.asset + body.currency,
       side: body.side,
-      user: user,
       asset: body.asset,
       currency: body.currency,
+      exchange: body.exchange,
+      description: body.description,
     } as ManageOrdersAdmin
-    if (!bot.user)
+    if (!order.user)
       throw new NotFoundException("can't build token, is query failed")
-    const data = await this.mangeOrdersAdminRepository.create(bot)
-    const newBot = await this.mangeOrdersAdminRepository.save(data)
-    delete newBot.createdAt
-    delete newBot.deletedAt
-    delete newBot.updatedAt
+    const data = await this.mangeOrdersAdminRepository.create(order)
+    const newOrder = await this.mangeOrdersAdminRepository.save(data)
+    delete newOrder.createdAt
+    delete newOrder.deletedAt
+    delete newOrder.updatedAt
     const payload = await Object.assign(
-      { id: user.id, email: user.email, botId: newBot.id },
+      { id: user.id, email: user.email, orderId: newOrder.id },
       body,
     )
     const token = this.jwtService.sign(payload)
-    const url = `http://localhost:80/public-trade/order?token=${token}`
-    await this.mangeOrdersAdminRepository.update({ id: newBot.id }, { url })
+    const url = `http://localhost:80/public-trade/order/admin?token=${token}`
+    await this.mangeOrdersAdminRepository.update({ id: newOrder.id }, { url })
     return url
+  }
+
+  async decodeOrderToken(token: string) {
+    const result = this.jwtService.decode(token) as payloadOrderReq
+    console.log(result, token)
+    const data = await this.mangeOrdersAdminRepository.findOne({
+      id: result.orderId,
+    })
+    if (!data) throw new BadRequestException('bot does not active')
+    return result
   }
 }

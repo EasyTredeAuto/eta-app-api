@@ -18,6 +18,7 @@ import { Ajax } from 'src/utils/ajax'
   imports: [
     TypeOrmModule.forFeature([
       ManageOrdersAdmin,
+      ManageOrders,
       Transaction,
       User,
     ]),
@@ -36,7 +37,8 @@ import { Ajax } from 'src/utils/ajax'
     UserService,
     OrderAdminService,
     BotBinanceTradeService,
+    BinanceCoinService,
   ],
   controllers: [ManageOrderAdminController],
 })
-export class ManageOrderAdminModule {}
+export class OrderAdminModule {}

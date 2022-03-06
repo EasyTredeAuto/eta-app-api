@@ -73,7 +73,6 @@ export class BotUserController {
   @Auth()
   @Put()
   async updateTokenBot(@Body() body: payloadBotUpdateReq, @Request() request) {
-    console.log(body)
     const { id, email } = request.user.data
     if (!id) throw new NotFoundException('User does not exists')
     if (

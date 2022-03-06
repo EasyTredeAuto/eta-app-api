@@ -14,6 +14,7 @@ import { PublicTradeModule } from './public-trade/public-trade.module'
 import { UserModule } from './user/user.module'
 import { APP_GUARD } from '@nestjs/core'
 import { TransactionModule } from './transaction/transaction.module'
+import { OrderAdminModule } from './manage-order-admin/manage-order-admin.module'
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { TransactionModule } from './transaction/transaction.module'
     BinanceCoinModule,
     BinanceBotModule,
     BotUserModule,
+    OrderAdminModule,
     PublicTradeModule,
     TransactionModule,
   ],

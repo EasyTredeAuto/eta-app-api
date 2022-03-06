@@ -1,6 +1,8 @@
 import { IsNumber, IsString } from 'class-validator'
 
 export class payloadOrderReq {
+  @IsNumber()
+  orderId: number
   @IsString()
   name: string
   @IsString()

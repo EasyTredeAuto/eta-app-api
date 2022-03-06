@@ -30,6 +30,8 @@ export class ManageOrdersAdmin {
   url: string
   @Column({ type: 'varchar', length: 50, default: "binance" })
   exchange: string
+  @Column()
+  description: string
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
   @UpdateDateColumn({ type: 'timestamp' })

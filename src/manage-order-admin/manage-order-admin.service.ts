@@ -19,4 +19,16 @@ export class OrderAdminService {
     })
     return { data: result, count: total }
   }
+
+  async findAll(id: number) {
+    return await this.mangeOrdersRepository.find({ where: { id } })
+  }
+
+  async findOne(id: number) {
+    return await this.mangeOrdersRepository.findOne({ where: { id } })
+  }
+
+  async deleteBot(id: number) {
+    return await this.mangeOrdersRepository.softDelete(id)
+  }
 }
