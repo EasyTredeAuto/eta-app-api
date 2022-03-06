@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Transaction } from '../public-trade/transaction-mybot.entity'
+import { Transaction } from '../public-trade/transaction-orders.entity'
 
 @Entity()
 export class ManageOrders {

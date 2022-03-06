@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Transaction } from 'src/public-trade/transaction-mybot.entity'
+import { Transaction } from 'src/public-trade/transaction-orders.entity'
 import { Repository } from 'typeorm'
 import { transactionQueryReq } from './dtos/transaction.query.dto'
 

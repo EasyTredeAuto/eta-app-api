@@ -15,7 +15,7 @@ import { hash } from 'bcrypt'
 import { Bot } from 'src/binance-bot/bot.entity'
 import { ManageOrders } from 'src/manage-order/manage-orders.entity'
 import { AppRoles } from 'src/app.roles'
-import { Transaction } from 'src/public-trade/transaction-mybot.entity'
+import { Transaction } from 'src/public-trade/transaction-orders.entity'
 
 @Entity()
 export class User {

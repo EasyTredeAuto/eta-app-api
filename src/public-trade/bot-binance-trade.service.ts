@@ -14,7 +14,7 @@ import { payloadBotDe } from 'src/manage-order/dtos/decode-payload.dto'
 import { ManageOrders } from 'src/manage-order/manage-orders.entity'
 import { UserService } from 'src/user/user.service'
 import { Repository } from 'typeorm'
-import { Transaction } from './transaction-mybot.entity'
+import { Transaction } from './transaction-orders.entity'
 
 @Injectable()
 export class BotBinanceTradeService {
