@@ -12,10 +12,16 @@ import { User } from 'src/user/user.entity'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import { Ajax } from 'src/utils/ajax'
 import { BotBinanceTradeService } from '../public-trade/bot-binance-trade.service'
+import { ManageOrdersAdmin } from 'src/manage-order-admin/manage-orders-admin.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ManageOrders, Transaction, User]),
+    TypeOrmModule.forFeature([
+      ManageOrders,
+      ManageOrdersAdmin,
+      Transaction,
+      User,
+    ]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

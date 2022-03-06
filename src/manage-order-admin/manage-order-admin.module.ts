@@ -18,7 +18,6 @@ import { Ajax } from 'src/utils/ajax'
   imports: [
     TypeOrmModule.forFeature([
       ManageOrdersAdmin,
-      ManageOrders,
       Transaction,
       User,
     ]),

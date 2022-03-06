@@ -7,6 +7,7 @@ import { JwtService } from '@nestjs/jwt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import { payloadOrderReq } from 'src/manage-order-admin/dtos/payloadOrderReq.dtos'
+import { ManageOrdersAdmin } from 'src/manage-order-admin/manage-orders-admin.entity'
 import {
   payloadBotReq,
   payloadBotUpdateReq,
@@ -24,6 +25,8 @@ export class BotBinanceTradeService {
     private transactionRepository: Repository<Transaction>,
     @InjectRepository(ManageOrders)
     private mangeOrdersRepository: Repository<ManageOrders>,
+    @InjectRepository(ManageOrdersAdmin)
+    private mangeOrdersAdminRepository: Repository<ManageOrdersAdmin>,
     private readonly binanceService: BinanceCoinService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -245,6 +248,29 @@ export class BotBinanceTradeService {
   // admin only ===============================================================================
 
   async createAdminOrder(userId: number, body: payloadOrderReq) {
-    
+    const user = await this.userService.findOne({ id: userId })
+    const bot = {
+      name: body.name,
+      symbol: body.asset + body.currency,
+      side: body.side,
+      user: user,
+      asset: body.asset,
+      currency: body.currency,
+    } as ManageOrdersAdmin
+    if (!bot.user)
+      throw new NotFoundException("can't build token, is query failed")
+    const data = await this.mangeOrdersAdminRepository.create(bot)
+    const newBot = await this.mangeOrdersAdminRepository.save(data)
+    delete newBot.createdAt
+    delete newBot.deletedAt
+    delete newBot.updatedAt
+    const payload = await Object.assign(
+      { id: user.id, email: user.email, botId: newBot.id },
+      body,
+    )
+    const token = this.jwtService.sign(payload)
+    const url = `http://localhost:80/public-trade/order?token=${token}`
+    await this.mangeOrdersAdminRepository.update({ id: newBot.id }, { url })
+    return url
   }
 }

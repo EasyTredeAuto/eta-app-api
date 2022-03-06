@@ -12,10 +12,12 @@ import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import { Ajax } from 'src/utils/ajax'
 import { BotBinanceTradeService } from './bot-binance-trade.service'
 import { PublicTradeController } from './public-trade.controller'
+import { ManageOrdersAdmin } from 'src/manage-order-admin/manage-orders-admin.entity'
+import { OrderAdminService } from 'src/manage-order-admin/manage-order-admin.service'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([ManageOrders, Transaction, User]),
+    TypeOrmModule.forFeature([ManageOrders, ManageOrdersAdmin, Transaction, User]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -28,6 +30,7 @@ import { PublicTradeController } from './public-trade.controller'
   providers: [
     UserService,
     BotUserService,
+    OrderAdminService,
     ConfigService,
     BinanceCoinService,
     Ajax,
