@@ -1,15 +1,18 @@
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+import { NestExpressApplication } from '@nestjs/platform-express'
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { AppModule } from './app.module'
+// import { join } from 'path'
 import { setDefaultUser } from './config/default-user'
 import env from './utils/env'
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule)
+  const app = await NestFactory.create<NestExpressApplication>(AppModule)
   const configService = app.get(ConfigService)
 
-  var whitelist = ['http://localhost:3000', 'http://localhost:8000']
+  // app.useStaticAssets(join(__dirname, '..', 'build'))
+
   app.enableCors({
     origin: true,
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
