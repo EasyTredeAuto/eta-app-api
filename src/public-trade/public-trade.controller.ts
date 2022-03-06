@@ -6,9 +6,9 @@ import {
   Query,
 } from '@nestjs/common'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
-import { payloadBotDe } from 'src/bot-user/dtos/decode-payload.dto'
+import { payloadBotDe } from 'src/manage-order/dtos/decode-payload.dto'
 import { ApiTags } from '@nestjs/swagger'
-import { BotUserService } from 'src/bot-user/bot-user.service'
+import { BotUserService } from 'src/manage-order/manage-order.service'
 
 @ApiTags('Public trade')
 @Controller('public-trade')

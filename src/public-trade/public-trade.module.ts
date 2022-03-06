@@ -1,8 +1,8 @@
 import { CacheModule, Module } from '@nestjs/common'
-import { BotUserService } from '../bot-user/bot-user.service'
+import { BotUserService } from '../manage-order/manage-order.service'
 import { UserService } from 'src/user/user.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { MyBot } from '../bot-user/mybot.entity'
+import { ManageOrders } from '../manage-order/manage-orders.entity'
 import { Transaction } from './transaction-mybot.entity'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
@@ -15,7 +15,7 @@ import { PublicTradeController } from './public-trade.controller'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MyBot, Transaction, User]),
+    TypeOrmModule.forFeature([ManageOrders, Transaction, User]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

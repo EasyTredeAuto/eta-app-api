@@ -10,15 +10,15 @@ import {
   Put,
   Request,
 } from '@nestjs/common'
-import { BotUserService } from './bot-user.service'
+import { BotUserService } from './manage-order.service'
 import { ApiTags } from '@nestjs/swagger'
 import { Auth } from 'src/common/decorators'
 import { payloadBotReq, payloadBotUpdateReq } from './dtos/create-bot-user-dto'
 import { UserService } from 'src/user/user.service'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 
-@ApiTags('My bot')
-@Controller('bot-user')
+@ApiTags('Manage orders')
+@Controller('mange-orders')
 export class BotUserController {
   constructor(
     private readonly botBinanceTradeService: BotBinanceTradeService,

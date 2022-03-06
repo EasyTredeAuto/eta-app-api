@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common'
-import { MyBot } from './mybot.entity'
+import { ManageOrders } from './manage-orders.entity'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
 export class BotUserService {
   constructor(
-    @InjectRepository(MyBot)
-    private myBotRepository: Repository<MyBot>,
+    @InjectRepository(ManageOrders)
+    private mangeOrdersRepository: Repository<ManageOrders>,
   ) {}
 
   async findAllAndCount(where: any, page: number, size: number) {
-    const [result, total] = await this.myBotRepository.findAndCount({
+    const [result, total] = await this.mangeOrdersRepository.findAndCount({
       where,
       order: { createdAt: 'DESC' },
       take: size,
@@ -21,14 +21,14 @@ export class BotUserService {
   }
 
   async findAll(id: number) {
-    return await this.myBotRepository.find({ where: { id } })
+    return await this.mangeOrdersRepository.find({ where: { id } })
   }
 
   async findBot(id: number) {
-    return await this.myBotRepository.findOne({ where: { id } })
+    return await this.mangeOrdersRepository.findOne({ where: { id } })
   }
 
   async deleteBot(id: number) {
-    return await this.myBotRepository.softDelete(id)
+    return await this.mangeOrdersRepository.softDelete(id)
   }
 }

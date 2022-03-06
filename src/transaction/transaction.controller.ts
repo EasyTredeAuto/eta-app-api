@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query, Request } from '@nestjs/common'
-import { BotUserService } from 'src/bot-user/bot-user.service'
+import { BotUserService } from 'src/manage-order/manage-order.service'
 import { Auth } from 'src/common/decorators'
 import { transactionQueryReq } from './dtos/transaction.query.dto'
 import { TransactionService } from './transaction.service'

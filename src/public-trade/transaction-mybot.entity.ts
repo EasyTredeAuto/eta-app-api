@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { MyBot } from '../bot-user/mybot.entity'
+import { ManageOrders } from '../manage-order/manage-orders.entity'
 
 @Entity()
 export class Transaction {
@@ -30,8 +30,8 @@ export class Transaction {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date
 
-  @ManyToOne(() => MyBot, (myBot: MyBot) => myBot.transactions)
-  bot: MyBot
+  @ManyToOne(() => ManageOrders, (order: ManageOrders) => order.transactions)
+  order: ManageOrders
 
   @ManyToOne(() => User, (user: User) => user.transactions)
   user: User

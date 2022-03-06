@@ -9,9 +9,9 @@ import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import {
   payloadBotReq,
   payloadBotUpdateReq,
-} from 'src/bot-user/dtos/create-bot-user-dto'
-import { payloadBotDe } from 'src/bot-user/dtos/decode-payload.dto'
-import { MyBot } from 'src/bot-user/mybot.entity'
+} from 'src/manage-order/dtos/create-bot-user-dto'
+import { payloadBotDe } from 'src/manage-order/dtos/decode-payload.dto'
+import { ManageOrders } from 'src/manage-order/manage-orders.entity'
 import { UserService } from 'src/user/user.service'
 import { Repository } from 'typeorm'
 import { Transaction } from './transaction-mybot.entity'
@@ -21,17 +21,17 @@ export class BotBinanceTradeService {
   constructor(
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
-    @InjectRepository(MyBot)
-    private myBotRepository: Repository<MyBot>,
+    @InjectRepository(ManageOrders)
+    private mangeOrdersRepository: Repository<ManageOrders>,
     private readonly binanceService: BinanceCoinService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
   ) {}
 
   async roundUpdate(id: number) {
-    await this.myBotRepository
+    await this.mangeOrdersRepository
       .createQueryBuilder()
-      .update('my_bot')
+      .update('manage_order')
       .set({ round: () => `round + 1` })
       .where('id = :id', { id })
       .execute()
@@ -60,7 +60,7 @@ export class BotBinanceTradeService {
       amount,
       quantity: order.amount,
       price: order.price,
-      bot: body.botId,
+      order: body.botId,
       side: 'buy',
       type: order.type,
       user: id,
@@ -94,7 +94,7 @@ export class BotBinanceTradeService {
       amount,
       quantity: order.amount,
       price: order.price,
-      bot: body.botId,
+      order: body.botId,
       side: 'sell',
       type: order.type,
       user: id,
@@ -128,7 +128,7 @@ export class BotBinanceTradeService {
       amount,
       quantity: order.amount,
       price: order.price,
-      bot: body.botId,
+      order: body.botId,
       side: 'buy',
       type: order.type,
       user: id,
@@ -162,7 +162,7 @@ export class BotBinanceTradeService {
       amount,
       quantity: order.amount,
       price: order.price,
-      bot: body.botId,
+      order: body.botId,
       side: 'sell',
       type: order.type,
       user: id,
@@ -185,11 +185,11 @@ export class BotBinanceTradeService {
       user: user,
       asset: body.asset,
       currency: body.currency,
-    } as MyBot
+    } as ManageOrders
     if (!bot.user)
       throw new NotFoundException("can't build token, is query failed")
-    const data = await this.myBotRepository.create(bot)
-    const newBot = await this.myBotRepository.save(data)
+    const data = await this.mangeOrdersRepository.create(bot)
+    const newBot = await this.mangeOrdersRepository.save(data)
     delete newBot.createdAt
     delete newBot.deletedAt
     delete newBot.updatedAt
@@ -198,13 +198,12 @@ export class BotBinanceTradeService {
       body,
     )
     const token = this.jwtService.sign(payload)
-    const url = `http://localhost:8000/public-trade/order?token=${token}`
-    await this.myBotRepository.update({ id: newBot.id }, { url })
+    const url = `http://localhost:80/public-trade/order?token=${token}`
+    await this.mangeOrdersRepository.update({ id: newBot.id }, { url })
     return url
   }
 
   async updateBotToken(id: number, body: payloadBotUpdateReq) {
-    console.log(id, body)
     const user = await this.userService.findOne({ id })
     if (!user.id)
       throw new NotFoundException("can't build token, is query failed")
@@ -213,7 +212,7 @@ export class BotBinanceTradeService {
       body,
     )
     const token = this.jwtService.sign(payload)
-    const url = `http://localhost:8000/public-trade/order?token=${token}`
+    const url = `http://localhost:80/public-trade/order?token=${token}`
     const bot = {
       name: body.name,
       symbol: body.asset + body.currency,
@@ -225,9 +224,9 @@ export class BotBinanceTradeService {
       asset: body.asset,
       currency: body.currency,
       url,
-    } as MyBot
-    await this.myBotRepository.update({ id: body.id }, bot)
-    const thisBot = await this.myBotRepository.findOne({ id: body.id })
+    } as ManageOrders
+    await this.mangeOrdersRepository.update({ id: body.id }, bot)
+    const thisBot = await this.mangeOrdersRepository.findOne({ id: body.id })
     delete thisBot.createdAt
     delete thisBot.deletedAt
     delete thisBot.updatedAt
@@ -236,7 +235,7 @@ export class BotBinanceTradeService {
 
   async decodeBotToken(token: string) {
     const result = this.jwtService.decode(token) as payloadBotDe
-    const data = await this.myBotRepository.findOne({ id: result.botId })
+    const data = await this.mangeOrdersRepository.findOne({ id: result.botId })
     if (!data || !data.active)
       throw new BadRequestException('bot does not active')
     return result

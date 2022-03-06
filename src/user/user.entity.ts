@@ -13,7 +13,7 @@ import {
 } from 'typeorm'
 import { hash } from 'bcrypt'
 import { Bot } from 'src/binance-bot/bot.entity'
-import { MyBot } from 'src/bot-user/mybot.entity'
+import { ManageOrders } from 'src/manage-order/manage-orders.entity'
 import { AppRoles } from 'src/app.roles'
 import { Transaction } from 'src/public-trade/transaction-mybot.entity'
 
@@ -54,16 +54,16 @@ export class User {
   bot: Bot
 
   @JoinColumn()
-  myBot: MyBot
+  order: ManageOrders
 
   @JoinColumn()
-  transaction: MyBot
+  transaction: ManageOrders
 
   @OneToMany(() => Bot, (bot: Bot) => bot.id)
   bots: Bot[]
 
-  @OneToMany(() => MyBot, (bot: MyBot) => bot.id)
-  myBots: MyBot[]
+  @OneToMany(() => ManageOrders, (order: ManageOrders) => order.id)
+  orders: ManageOrders[]
 
   @OneToMany(() => Transaction, (transaction: Transaction) => transaction.id)
   transactions: Transaction[]

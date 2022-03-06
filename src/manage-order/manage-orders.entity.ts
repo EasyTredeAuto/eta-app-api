@@ -13,7 +13,7 @@ import {
 import { Transaction } from '../public-trade/transaction-mybot.entity'
 
 @Entity()
-export class MyBot {
+export class ManageOrders {
   @PrimaryGeneratedColumn()
   id: number
   @Column()
@@ -48,7 +48,7 @@ export class MyBot {
   @JoinColumn()
   transaction: Transaction
 
-  @ManyToOne(() => User, (user: User) => user.myBots)
+  @ManyToOne(() => User, (user: User) => user.orders)
   user: User
 
   @OneToMany(() => Transaction, (transaction: Transaction) => transaction.id)
