@@ -13,7 +13,7 @@ import { BotUserModule } from './manage-order/manage-order.module'
 import { PublicTradeModule } from './public-trade/public-trade.module'
 import { UserModule } from './user/user.module'
 import { APP_GUARD } from '@nestjs/core'
-import { TransactionModule } from './transaction/transaction.module';
+import { TransactionModule } from './transaction/transaction.module'
 
 @Module({
   imports: [
