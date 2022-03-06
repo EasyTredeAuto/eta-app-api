@@ -18,7 +18,7 @@ import { UserService } from 'src/user/user.service'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 
 @ApiTags('Manage orders')
-@Controller('mange-orders')
+@Controller('manage-orders')
 export class BotUserController {
   constructor(
     private readonly botBinanceTradeService: BotBinanceTradeService,
