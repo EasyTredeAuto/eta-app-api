@@ -6,30 +6,33 @@ import {
   Query,
 } from '@nestjs/common'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
-import { payloadBotDe } from 'src/manage-order/dtos/decode-payload.dto'
+import { payloadOrderDe } from 'src/manage-order/dtos/decode-payload.dto'
+import {
+  payloadOrderReq,
+  payloadOrderUpdateReq,
+} from 'src/manage-order/dtos/create-bot-user-dto'
 import { ApiTags } from '@nestjs/swagger'
-import { BotUserService } from 'src/manage-order/manage-order.service'
-import { payloadOrderReq } from 'src/manage-order-admin/dtos/payloadOrderReq.dtos'
-import { OrderAdminService } from 'src/manage-order-admin/manage-order-admin.service'
+import { OrderUserService } from 'src/manage-order/manage-order.service'
+import { BotAdminService } from 'src/manage-bot-admin/manage-bot-admin.service'
 
 @ApiTags('Public trade')
 @Controller('public-trade')
 export class PublicTradeController {
   constructor(
     private readonly botBinanceTradeService: BotBinanceTradeService,
-    private readonly botUserService: BotUserService,
-    private readonly orderAdminService: OrderAdminService,
+    private readonly orderUserService: OrderUserService,
+    private readonly botAdminService: BotAdminService,
   ) {}
 
   @Get('/order')
   async Trade(@Query('token') token: string) {
     if (!token) throw new NotFoundException('token does not exists')
-    const result = (await this.botBinanceTradeService.decodeBotToken(
+    const result = (await this.botBinanceTradeService.decodeOrderToken(
       token,
-    )) as payloadBotDe
+    )) as payloadOrderDe
     if (
       !result ||
-      !result.botId ||
+      !result.orderId ||
       !result.name ||
       !result.asset ||
       !result.currency ||
@@ -37,7 +40,7 @@ export class PublicTradeController {
       !result.amountType
     )
       throw new BadRequestException('token does not used')
-    const bot = await this.botUserService.findBot(result.botId)
+    const bot = await this.orderUserService.findBot(result.orderId)
     if (!bot) throw new NotFoundException('Bot does not exists')
     let res
     if (result.side === 'buy' && result.type === 'limit')
@@ -51,32 +54,32 @@ export class PublicTradeController {
     return { message: 'bot trade success', data: res }
   }
 
-  @Get('/order/admin')
-  async TradeAdmin(@Query('token') token: string) {
-    if (!token) throw new NotFoundException('token does not exists')
-    const result = (await this.botBinanceTradeService.decodeOrderToken(
-      token,
-    )) as payloadOrderReq
-    if (
-      !result ||
-      !result.orderId ||
-      !result.name ||
-      !result.asset ||
-      !result.currency
-    )
-      throw new BadRequestException('token does not used')
-    const order = await this.orderAdminService.findOne(result.orderId)
-    if (!order) throw new NotFoundException('Bot does not exists')
+  // @Get('/order/admin')
+  // async TradeAdmin(@Query('token') token: string) {
+  //   if (!token) throw new NotFoundException('token does not exists')
+  //   const result = (await this.botBinanceTradeService.decodeBotToken(
+  //     token,
+  //   )) as payloadOrderReq
+  //   if (
+  //     !result ||
+  //     !result.orderId ||
+  //     !result.name ||
+  //     !result.asset ||
+  //     !result.currency
+  //   )
+  //     throw new BadRequestException('token does not used')
+  //   const order = await this.orderAdminService.findOne(result.orderId)
+  //   if (!order) throw new NotFoundException('Bot does not exists')
 
-    let res
-    // if (result.side === 'buy' && result.type === 'limit')
-    //   res = await this.botBinanceTradeService.createOrderBuyLimit(result)
-    // if (result.side === 'sell' && result.type === 'limit')
-    //   res = await this.botBinanceTradeService.createOrderSellLimit(result)
-    // if (result.side === 'buy' && result.type === 'market')
-    //   res = await this.botBinanceTradeService.createOrderBuyMarket(result)
-    // if (result.side === 'sell' && result.type === 'market')
-    //   res = await this.botBinanceTradeService.createOrderSellMarket(result)
-    return { message: 'bot trade success', data: order }
-  }
+  //   let res
+  //   // if (result.side === 'buy' && result.type === 'limit')
+  //   //   res = await this.botBinanceTradeService.createOrderBuyLimit(result)
+  //   // if (result.side === 'sell' && result.type === 'limit')
+  //   //   res = await this.botBinanceTradeService.createOrderSellLimit(result)
+  //   // if (result.side === 'buy' && result.type === 'market')
+  //   //   res = await this.botBinanceTradeService.createOrderBuyMarket(result)
+  //   // if (result.side === 'sell' && result.type === 'market')
+  //   //   res = await this.botBinanceTradeService.createOrderSellMarket(result)
+  //   return { message: 'bot trade success', data: order }
+  // }
 }

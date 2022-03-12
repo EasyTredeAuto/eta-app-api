@@ -1,9 +1,9 @@
 import { CacheModule, Module } from '@nestjs/common'
-import { BotUserService } from './manage-order.service'
-import { BotUserController } from './manage-order.controller'
+import { OrderUserService } from './manage-order.service'
+import { OrderUserController } from './manage-order.controller'
 import { UserService } from 'src/user/user.service'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { ManageOrders } from './manage-orders.entity'
+import { Orders } from './manage-orders.entity'
 import { Transaction } from '../public-trade/transaction-orders.entity'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
@@ -12,16 +12,11 @@ import { User } from 'src/user/user.entity'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import { Ajax } from 'src/utils/ajax'
 import { BotBinanceTradeService } from '../public-trade/bot-binance-trade.service'
-import { ManageOrdersAdmin } from 'src/manage-order-admin/manage-orders-admin.entity'
+import { BotsAdmin } from 'src/manage-bot-admin/manage-bots-admin.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      ManageOrders,
-      ManageOrdersAdmin,
-      Transaction,
-      User,
-    ]),
+    TypeOrmModule.forFeature([Orders, BotsAdmin, Transaction, User]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -33,12 +28,12 @@ import { ManageOrdersAdmin } from 'src/manage-order-admin/manage-orders-admin.en
   ],
   providers: [
     UserService,
-    BotUserService,
+    OrderUserService,
     ConfigService,
     BinanceCoinService,
     Ajax,
     BotBinanceTradeService,
   ],
-  controllers: [BotUserController],
+  controllers: [OrderUserController],
 })
-export class BotUserModule {}
+export class OrderUserModule {}

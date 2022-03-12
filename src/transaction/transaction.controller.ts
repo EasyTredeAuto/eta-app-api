@@ -1,5 +1,5 @@
 import { Controller, Get, Param, Query, Request } from '@nestjs/common'
-import { BotUserService } from 'src/manage-order/manage-order.service'
+import { OrderUserService } from 'src/manage-order/manage-order.service'
 import { Auth } from 'src/common/decorators'
 import { transactionQueryReq } from './dtos/transaction.query.dto'
 import { TransactionService } from './transaction.service'
@@ -8,7 +8,7 @@ import { TransactionService } from './transaction.service'
 export class TransactionController {
   constructor(
     private readonly transactionService: TransactionService,
-    private readonly botUserService: BotUserService,
+    private readonly orderUserService: OrderUserService,
   ) {}
 
   @Auth()

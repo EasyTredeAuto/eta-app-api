@@ -10,19 +10,22 @@ import {
   Put,
   Request,
 } from '@nestjs/common'
-import { BotUserService } from './manage-order.service'
+import { OrderUserService } from './manage-order.service'
 import { ApiTags } from '@nestjs/swagger'
 import { Auth } from 'src/common/decorators'
-import { payloadBotReq, payloadBotUpdateReq } from './dtos/create-bot-user-dto'
+import {
+  payloadOrderReq,
+  payloadOrderUpdateReq,
+} from './dtos/create-bot-user-dto'
 import { UserService } from 'src/user/user.service'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 
 @ApiTags('Manage orders')
 @Controller('manage-orders')
-export class BotUserController {
+export class OrderUserController {
   constructor(
     private readonly botBinanceTradeService: BotBinanceTradeService,
-    private readonly botUserService: BotUserService,
+    private readonly orderUserService: OrderUserService,
     private readonly userService: UserService,
   ) {}
 
@@ -34,7 +37,7 @@ export class BotUserController {
     @Request() request,
   ) {
     const { id } = request.user.data
-    const allBot = await this.botUserService.findAllAndCount(
+    const allBot = await this.orderUserService.findAllAndCount(
       { user: id },
       page,
       size,
@@ -44,7 +47,7 @@ export class BotUserController {
 
   @Auth()
   @Post()
-  async createTokenBot(@Body() body: payloadBotReq, @Request() request) {
+  async createTokenBot(@Body() body: payloadOrderReq, @Request() request) {
     const { id, email } = request.user.data
     if (!id) throw new NotFoundException('User does not exists')
     if (
@@ -63,7 +66,7 @@ export class BotUserController {
       email,
     })
     if (!user) throw new NotFoundException('User does not exists')
-    const urlBot = await this.botBinanceTradeService.createBotToken(
+    const urlBot = await this.botBinanceTradeService.createOrderToken(
       user.id,
       body,
     )
@@ -72,7 +75,10 @@ export class BotUserController {
 
   @Auth()
   @Put()
-  async updateTokenBot(@Body() body: payloadBotUpdateReq, @Request() request) {
+  async updateTokenBot(
+    @Body() body: payloadOrderUpdateReq,
+    @Request() request,
+  ) {
     const { id, email } = request.user.data
     if (!id) throw new NotFoundException('User does not exists')
     if (
@@ -91,7 +97,7 @@ export class BotUserController {
       email,
     })
     if (!user) throw new NotFoundException('User does not exists')
-    const urlBot = await this.botBinanceTradeService.updateBotToken(
+    const urlBot = await this.botBinanceTradeService.updateOrderToken(
       user.id,
       body,
     )
@@ -102,8 +108,8 @@ export class BotUserController {
   @Delete('/:orderId')
   async deleteBot(@Param('orderId') orderId: number, @Request() request) {
     const { id } = request.user.data
-    await this.botUserService.deleteBot(orderId)
-    const allBot = await this.botUserService.findAll(id)
+    await this.orderUserService.deleteBot(orderId)
+    const allBot = await this.orderUserService.findAll(id)
     return { message: 'bot deleted', data: allBot }
   }
 }

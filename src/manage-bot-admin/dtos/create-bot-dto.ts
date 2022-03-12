@@ -1,39 +1,48 @@
 import { IsNumber, IsString } from 'class-validator'
 
-export class payloadOrderReq {
+export class payloadBotReq {
   @IsString()
-  email: string
+  symbol: string
   @IsString()
   name: string
+  @IsString()
+  detail: string
   @IsString()
   asset: string
   @IsString()
   currency: string
-  @IsNumber()
-  amount: number
-  @IsString()
-  amountType: string
-  @IsString()
-  side: string
-  @IsString()
-  type: string
 }
 
-export class payloadOrderUpdateReq {
+export class payloadBotUpdateReq {
   @IsNumber()
   id: number
   @IsString()
+  symbol: string
+  @IsString()
   name: string
+  @IsString()
+  detail: string
   @IsString()
   asset: string
   @IsString()
   currency: string
+}
+
+export class payloadBotToken {
   @IsNumber()
-  amount: number
+  id: number
   @IsString()
-  amountType: string
+  symbol: string
   @IsString()
-  side: string
+  name: string
   @IsString()
-  type: string
+  detail: string
+  @IsString()
+  asset: string
+  @IsString()
+  currency: string
+  @IsString()
+  botId: number
+  @IsString()
+  side: number
 }

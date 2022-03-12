@@ -12,10 +12,10 @@ import {
   UpdateDateColumn,
 } from 'typeorm'
 import { hash } from 'bcrypt'
-import { Bot } from 'src/binance-bot/bot.entity'
-import { ManageOrders } from 'src/manage-order/manage-orders.entity'
+import { Orders } from 'src/manage-order/manage-orders.entity'
 import { AppRoles } from 'src/app.roles'
 import { Transaction } from 'src/public-trade/transaction-orders.entity'
+import { BotsAdmin } from 'src/manage-bot-admin/manage-bots-admin.entity'
 
 @Entity()
 export class User {
@@ -51,19 +51,19 @@ export class User {
   }
 
   @JoinColumn()
-  bot: Bot
+  bot: BotsAdmin
 
   @JoinColumn()
-  order: ManageOrders
+  order: Orders
 
   @JoinColumn()
-  transaction: ManageOrders
+  transaction: Orders
 
-  @OneToMany(() => Bot, (bot: Bot) => bot.id)
-  bots: Bot[]
+  @OneToMany(() => BotsAdmin, (bot: BotsAdmin) => bot.id)
+  bots: BotsAdmin[]
 
-  @OneToMany(() => ManageOrders, (order: ManageOrders) => order.id)
-  orders: ManageOrders[]
+  @OneToMany(() => Orders, (order: Orders) => order.id)
+  orders: Orders[]
 
   @OneToMany(() => Transaction, (transaction: Transaction) => transaction.id)
   transactions: Transaction[]

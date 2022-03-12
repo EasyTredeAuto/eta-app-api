@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common'
-import { ManageOrders } from './manage-orders.entity'
+import { Orders } from './manage-orders.entity'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 
 @Injectable()
-export class BotUserService {
+export class OrderUserService {
   constructor(
-    @InjectRepository(ManageOrders)
-    private mangeOrdersRepository: Repository<ManageOrders>,
+    @InjectRepository(Orders)
+    private mangeOrdersRepository: Repository<Orders>,
   ) {}
 
   async findAllAndCount(where: any, page: number, size: number) {

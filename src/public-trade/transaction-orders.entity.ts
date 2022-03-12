@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { ManageOrders } from '../manage-order/manage-orders.entity'
+import { Orders } from '../manage-order/manage-orders.entity'
 
 @Entity()
 export class Transaction {
@@ -30,8 +30,8 @@ export class Transaction {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date
 
-  @ManyToOne(() => ManageOrders, (order: ManageOrders) => order.transactions)
-  order: ManageOrders
+  @ManyToOne(() => Orders, (order: Orders) => order.transactions)
+  order: Orders
 
   @ManyToOne(() => User, (user: User) => user.transactions)
   user: User

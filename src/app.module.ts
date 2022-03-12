@@ -8,13 +8,11 @@ import env from './utils/env'
 import { AccessControlModule } from 'nest-access-control'
 import { roles } from './app.roles'
 import { BinanceCoinModule } from './binance-coin/binance-coin.module'
-import { BinanceBotModule } from './binance-bot/binance-bot.module'
-import { BotUserModule } from './manage-order/manage-order.module'
+import { OrderUserModule } from './manage-order/manage-order.module'
 import { PublicTradeModule } from './public-trade/public-trade.module'
 import { UserModule } from './user/user.module'
 import { APP_GUARD } from '@nestjs/core'
 import { TransactionModule } from './transaction/transaction.module'
-import { OrderAdminModule } from './manage-order-admin/manage-order-admin.module'
 
 @Module({
   imports: [
@@ -39,9 +37,7 @@ import { OrderAdminModule } from './manage-order-admin/manage-order-admin.module
     AuthModule,
     UserModule,
     BinanceCoinModule,
-    BinanceBotModule,
-    BotUserModule,
-    OrderAdminModule,
+    OrderUserModule,
     PublicTradeModule,
     TransactionModule,
   ],

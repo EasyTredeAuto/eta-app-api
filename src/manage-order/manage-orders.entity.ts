@@ -13,7 +13,7 @@ import {
 import { Transaction } from '../public-trade/transaction-orders.entity'
 
 @Entity()
-export class ManageOrders {
+export class Orders {
   @PrimaryGeneratedColumn()
   id: number
   @Column()

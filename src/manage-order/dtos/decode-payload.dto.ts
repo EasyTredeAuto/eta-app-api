@@ -1,8 +1,8 @@
 import { IsNumber, IsString } from 'class-validator'
 
-export class payloadBotDe {
+export class payloadOrderDe {
   @IsNumber()
-  botId: number
+  orderId: number
   @IsString()
   email: string
   @IsString()
