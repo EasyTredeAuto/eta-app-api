@@ -105,10 +105,10 @@ export class ManageBotAdminController {
   }
 
   @Auth()
-  @Delete('/:orderId')
-  async deleteBot(@Param('orderId') orderId: number, @Request() request) {
+  @Delete('/:botId')
+  async deleteBot(@Param('botId') botId: number, @Request() request) {
     const { id } = request.user.data
-    await this.botsService.delete(orderId)
+    await this.botsService.delete(botId)
     const allBot = await this.botsService.findAllAndCount({ id }, 0, 10)
     return { message: 'bot deleted', data: allBot }
   }

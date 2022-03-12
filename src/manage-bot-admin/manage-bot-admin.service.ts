@@ -1,6 +1,12 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import { User } from 'src/user/user.entity'
 import { Repository } from 'typeorm'
+import {
+  payloadActiveBotMappingReq,
+  payloadBotMappingReq,
+  payloadUpdateBotMappingReq,
+} from './dtos/create-mapping'
 import { BotsAdmin } from './entitys/manage-bots-admin.entity'
 import { BotsUserMapping } from './entitys/use-bots-user.entity'
 
@@ -11,6 +17,8 @@ export class BotAdminService {
     private mangeBotRepository: Repository<BotsAdmin>,
     @InjectRepository(BotsUserMapping)
     private useBotRepository: Repository<BotsUserMapping>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async findAllAndCount(where: any, page: number, size: number) {
@@ -31,10 +39,8 @@ export class BotAdminService {
     })
     return { data: result }
   }
-  async findOne(id: number) {
-    return await this.mangeBotRepository.findOne({
-      where: { id },
-    })
+  async findOne(where) {
+    return await this.mangeBotRepository.findOne({ where })
   }
   async delete(id: number) {
     return await this.mangeBotRepository.softDelete({
@@ -65,6 +71,40 @@ export class BotAdminService {
     return await this.useBotRepository.findOne({
       where: { id },
     })
+  }
+  async createOneMapping(data: payloadBotMappingReq, userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } })
+    const bot = await this.mangeBotRepository.findOne({
+      where: { id: data.botId },
+    })
+    const botMapping = {
+      amount: data.amount,
+      amountType: data.amountType,
+      type: data.type,
+      bot: bot,
+      user: user,
+    } as BotsUserMapping
+    const preBot = await this.useBotRepository.create(botMapping)
+    return await this.useBotRepository.save(preBot)
+  }
+  async updateOneMapping(data: payloadUpdateBotMappingReq, userId: number) {
+    const user = await this.userRepository.findOne({ where: { id: userId } })
+    const bot = await this.mangeBotRepository.findOne({
+      where: { id: data.botId },
+    })
+    const botMapping = {
+      amount: data.amount,
+      amountType: data.amountType,
+      type: data.type,
+      bot: bot,
+      user: user,
+    } as BotsUserMapping
+    await this.useBotRepository.update({ id: data.id }, botMapping)
+    return await this.useBotRepository.findOne({ where: { id: data.id } })
+  }
+  async updateOneActive(id: number, data: payloadActiveBotMappingReq) {
+    await this.useBotRepository.update({ id }, { active: data.active })
+    return await this.useBotRepository.findOne({ where: { id } })
   }
   async deleteMapping(id: number) {
     return await this.useBotRepository.softDelete({
