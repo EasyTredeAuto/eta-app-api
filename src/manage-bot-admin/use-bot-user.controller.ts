@@ -72,7 +72,7 @@ export class UseBotByUserController {
     })
     if (mapping)
       return { message: 'You have already run this bot.', data: false }
-    const data = this.botsService.createOneMapping(body, id)
+    const data = await this.botsService.createOneMapping(body, id)
     return { message: 'successful', data }
   }
 
@@ -100,12 +100,12 @@ export class UseBotByUserController {
     if (!user) throw new NotFoundException('User does not exists')
     const mapping = await this.botsService.findOne({
       user: id,
-      bot: body.botId,
+      id: body.botId,
     })
     if (!mapping)
       return { message: 'This bot does not exist in your list.', data: false }
-    const data = this.botsService.updateOneMapping(body, id)
-    return { message: 'update bot success', data }
+    const data = await this.botsService.updateOneMapping(body, id)
+    return { message: 'success', data: JSON.parse(JSON.stringify(data)) }
   }
 
   @Auth()

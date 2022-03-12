@@ -46,6 +46,13 @@ export class ManageBotAdminController {
   }
 
   @Auth()
+  @Get('/options')
+  async findAllOption() {
+    const allBot = await this.botsService.findAll({ active: true })
+    return { message: 'this is all bot', ...allBot }
+  }
+
+  @Auth()
   @Post()
   async createTokenBot(@Body() body: payloadBotReq, @Request() request) {
     const { id, email, roles } = request.user.data

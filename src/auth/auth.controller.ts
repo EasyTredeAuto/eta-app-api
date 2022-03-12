@@ -28,8 +28,6 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginDto: LoginDto, @User() user: UserEntity) {
     const data = await this.authService.login(user)
-console.log(data)
-
     return {
       message: 'Login success',
       data,

@@ -326,7 +326,6 @@ export class BotBinanceTradeService {
 
   async decodeBotToken(token: string) {
     const result = this.jwtService.decode(token) as payloadBotToken
-    console.log(result, token)
     const data = await this.mangeBotsRepository.findOne({
       where: { id: result.botId, active: true },
     })

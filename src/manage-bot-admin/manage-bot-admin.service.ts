@@ -28,16 +28,23 @@ export class BotAdminService {
       take: size,
       skip: page * size,
     })
-    console.log(result)
 
     return { data: result, count: total }
   }
-  async findAll(where: any, page: number, size: number) {
+  async findAll(where: any) {
     const result = await this.mangeBotRepository.find({
       where,
       order: { createdAt: 'DESC' },
-      take: size,
-      skip: page * size,
+    })
+    result.forEach((x) => {
+      delete x.round
+      delete x.exchange
+      delete x.createdAt
+      delete x.updatedAt
+      delete x.deletedAt
+      delete x.urlBuy
+      delete x.urlSell
+      delete x.active
     })
     return { data: result }
   }
@@ -60,7 +67,7 @@ export class BotAdminService {
     })
     const bots = await this.mangeBotRepository.find()
     let result = []
-    for (const res of JSON.parse(JSON.stringify(_result))){
+    for (const res of JSON.parse(JSON.stringify(_result))) {
       const optionBot = bots.find((x) => x.id === res.botIds)
       res.name = optionBot.name
       res.symbol = optionBot.symbol
@@ -107,8 +114,6 @@ export class BotAdminService {
   }
   async updateOneMapping(data: payloadUpdateBotMappingReq, userId: number) {
     // update round
-    console.log(data)
-
     const user_bot = await this.useBotRepository.findOne({
       where: { id: data.id },
     })
@@ -116,9 +121,12 @@ export class BotAdminService {
       const bot_admin = await this.mangeBotRepository.findOne({
         where: { id: user_bot.botIds },
       })
+      const new_bot_admin = await this.mangeBotRepository.findOne({
+        where: { id: data.botId },
+      })
       await this.mangeBotRepository.update(
         { id: data.botId },
-        { round: bot_admin.round + 1 },
+        { round: new_bot_admin.round + 1 },
       )
       await this.mangeBotRepository.update(
         { id: user_bot.botIds },
@@ -136,6 +144,7 @@ export class BotAdminService {
       type: data.type,
       bot: bot,
       user: user,
+      botIds: data.botId,
     } as BotsUserMapping
     await this.useBotRepository.update({ id: data.id }, botMapping)
     return await this.useBotRepository.findOne({ where: { id: data.id } })
