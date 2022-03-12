@@ -28,7 +28,8 @@ export class BotAdminService {
       take: size,
       skip: page * size,
     })
-    return { data: result, count: total }
+    const mappings = await this.useBotRepository.find()
+    return { data: result, count: total, mappings }
   }
   async findAll(where: any, page: number, size: number) {
     const result = await this.mangeBotRepository.find({
@@ -48,7 +49,7 @@ export class BotAdminService {
     })
   }
 
-  // bot user mapping
+  // bot user mapping =====================================================================================================================
   async findAllAndCountMapping(where: any, page: number, size: number) {
     const [result, total] = await this.useBotRepository.findAndCount({
       where,
@@ -67,9 +68,9 @@ export class BotAdminService {
     })
     return { data: result }
   }
-  async findOneMapping(id: number) {
+  async findOneMapping(where: any) {
     return await this.useBotRepository.findOne({
-      where: { id },
+      where,
     })
   }
   async createOneMapping(data: payloadBotMappingReq, userId: number) {
