@@ -105,7 +105,7 @@ export class UseBotByUserController {
     if (!mapping)
       return { message: 'This bot does not exist in your list.', data: false }
     const data = await this.botsService.updateOneMapping(body, id)
-    return { message: 'success', data: JSON.parse(JSON.stringify(data)) }
+    return { message: 'successful', data: JSON.parse(JSON.stringify(data)) }
   }
 
   @Auth()
@@ -132,7 +132,7 @@ export class UseBotByUserController {
     if (!mapping)
       return { message: 'This bot does not exist in your list.', data: false }
     const data = this.botsService.updateOneActive(mappingId, body)
-    return { message: 'update bot success', data }
+    return { message: 'successful', data }
   }
 
   @Auth()
