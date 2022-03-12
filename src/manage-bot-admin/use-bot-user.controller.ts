@@ -64,15 +64,16 @@ export class UseBotByUserController {
       id,
       email,
     })
+
     if (!user) throw new NotFoundException('User does not exists')
-    const mapping = await this.botsService.findOne({
+    const mapping = await this.botsService.findOneMapping({
       user: id,
       bot: body.botId,
     })
     if (mapping)
       return { message: 'You have already run this bot.', data: false }
     const data = this.botsService.createOneMapping(body, id)
-    return { message: 'used bot successful', data }
+    return { message: 'successful', data }
   }
 
   @Auth()
@@ -135,11 +136,15 @@ export class UseBotByUserController {
   }
 
   @Auth()
-  @Delete('/:mappingId')
-  async deleteBot(@Param('mappingId') mappingId: number, @Request() request) {
+  @Delete('/:botId/:mappingId')
+  async deleteBot(
+    @Param('botId') botId: number,
+    @Param('mappingId') mappingId: number,
+    @Request() request,
+  ) {
     const { id } = request.user.data
-    await this.botsService.delete(mappingId)
-    const allBot = await this.botsService.findAllAndCount({ id }, 0, 10)
+    await this.botsService.deleteMapping(botId, mappingId)
+    const allBot = await this.botsService.findAllAndCountMapping({ id }, 0, 10)
     return { message: 'bot deleted', data: allBot }
   }
 }

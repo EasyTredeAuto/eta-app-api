@@ -28,8 +28,9 @@ export class BotAdminService {
       take: size,
       skip: page * size,
     })
-    const mappings = await this.useBotRepository.find()
-    return { data: result, count: total, mappings }
+    console.log(result)
+
+    return { data: result, count: total }
   }
   async findAll(where: any, page: number, size: number) {
     const result = await this.mangeBotRepository.find({
@@ -51,12 +52,23 @@ export class BotAdminService {
 
   // bot user mapping =====================================================================================================================
   async findAllAndCountMapping(where: any, page: number, size: number) {
-    const [result, total] = await this.useBotRepository.findAndCount({
+    const [_result, total] = await this.useBotRepository.findAndCount({
       where,
       order: { createdAt: 'DESC' },
       take: size,
       skip: page * size,
     })
+    const bots = await this.mangeBotRepository.find()
+    let result = []
+    for (const res of JSON.parse(JSON.stringify(_result))){
+      const optionBot = bots.find((x) => x.id === res.botIds)
+      res.name = optionBot.name
+      res.symbol = optionBot.symbol
+      res.asset = optionBot.asset
+      res.currency = optionBot.currency
+      res.detail = optionBot.detail
+      result.push(res)
+    }
     return { data: result, count: total }
   }
   async findAllMapping(where: any, page: number, size: number) {
@@ -78,17 +90,42 @@ export class BotAdminService {
     const bot = await this.mangeBotRepository.findOne({
       where: { id: data.botId },
     })
+    await this.mangeBotRepository.update(
+      { id: data.botId },
+      { round: bot.round + 1 },
+    )
     const botMapping = {
       amount: data.amount,
       amountType: data.amountType,
       type: data.type,
       bot: bot,
+      botIds: bot.id,
       user: user,
     } as BotsUserMapping
     const preBot = await this.useBotRepository.create(botMapping)
     return await this.useBotRepository.save(preBot)
   }
   async updateOneMapping(data: payloadUpdateBotMappingReq, userId: number) {
+    // update round
+    console.log(data)
+
+    const user_bot = await this.useBotRepository.findOne({
+      where: { id: data.id },
+    })
+    if (user_bot.botIds !== data.botId) {
+      const bot_admin = await this.mangeBotRepository.findOne({
+        where: { id: user_bot.botIds },
+      })
+      await this.mangeBotRepository.update(
+        { id: data.botId },
+        { round: bot_admin.round + 1 },
+      )
+      await this.mangeBotRepository.update(
+        { id: user_bot.botIds },
+        { round: bot_admin.round - 1 },
+      )
+    }
+
     const user = await this.userRepository.findOne({ where: { id: userId } })
     const bot = await this.mangeBotRepository.findOne({
       where: { id: data.botId },
@@ -107,7 +144,14 @@ export class BotAdminService {
     await this.useBotRepository.update({ id }, { active: data.active })
     return await this.useBotRepository.findOne({ where: { id } })
   }
-  async deleteMapping(id: number) {
+  async deleteMapping(botId: number, id: number) {
+    const bot = await this.mangeBotRepository.findOne({
+      where: { id: botId },
+    })
+    await this.mangeBotRepository.update(
+      { id: botId },
+      { round: bot.round - 1 },
+    )
     return await this.useBotRepository.softDelete({
       id,
     })

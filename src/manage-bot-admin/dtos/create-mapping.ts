@@ -8,7 +8,7 @@ export class payloadBotMappingReq {
   @IsString()
   type: string
   @IsNumber()
-  botId: string
+  botId: number
 }
 
 export class payloadUpdateBotMappingReq {
@@ -21,12 +21,12 @@ export class payloadUpdateBotMappingReq {
   @IsString()
   type: string
   @IsNumber()
-  botId: string
+  botId: number
 }
 
 export class payloadActiveBotMappingReq {
   @IsBoolean()
   active: boolean
   @IsNumber()
-  botId: string
+  botId: number
 }

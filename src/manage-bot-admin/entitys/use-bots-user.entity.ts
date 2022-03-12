@@ -19,6 +19,8 @@ import { transactionBotUserMapping } from './transaction-mapping.entity'
 export class BotsUserMapping {
   @PrimaryGeneratedColumn()
   id: number
+  @Column()
+  botIds: number
 
   @Column({ type: 'decimal', precision: 24, scale: 9 })
   amount: number
@@ -43,7 +45,7 @@ export class BotsUserMapping {
   @ManyToOne(() => User, (user: User) => user.botUserMappings)
   user: User
 
-  @ManyToOne(() => BotsAdmin, (bot: BotsAdmin) => bot.mappingUsers)
+  @ManyToOne(() => BotsAdmin, (bot: BotsAdmin) => bot.botMappingUsers)
   bot: BotsAdmin
 
   @OneToMany(

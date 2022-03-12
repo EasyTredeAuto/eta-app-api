@@ -42,11 +42,7 @@ export class ManageBotAdminController {
       page,
       size,
     )
-    let data = JSON.parse(JSON.stringify(allBot.data))
-    data.forEach((x) => {
-      x.round = allBot.mappings.filter((y) => y.bot.id === x.id).length
-    })
-    return { message: 'this is all bot', data, count: allBot.count }
+    return { message: 'this is all bot', ...allBot }
   }
 
   @Auth()

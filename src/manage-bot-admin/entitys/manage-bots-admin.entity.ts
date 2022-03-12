@@ -36,6 +36,8 @@ export class BotsAdmin {
   active: boolean
   @Column({ type: 'varchar', length: 50, default: 'binance' })
   exchange: string
+  @Column({ default: 0 })
+  round: number
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
   @UpdateDateColumn({ type: 'timestamp' })
@@ -44,7 +46,7 @@ export class BotsAdmin {
   deletedAt: Date
 
   @JoinColumn()
-  mappingUser: BotsUserMapping
+  botMappingUser: BotsUserMapping
 
   @JoinColumn()
   transactionMapping: transactionBotUserMapping
@@ -53,7 +55,7 @@ export class BotsAdmin {
   user: User
 
   @OneToMany(() => BotsUserMapping, (user: BotsUserMapping) => user.id)
-  mappingUsers: BotsUserMapping[]
+  botMappingUsers: BotsUserMapping[]
 
   @OneToMany(
     () => transactionBotUserMapping,
