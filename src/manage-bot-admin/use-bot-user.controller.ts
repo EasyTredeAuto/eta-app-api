@@ -18,9 +18,9 @@ import { UserService } from 'src/user/user.service'
 import { payloadBotReq, payloadUpdateBotReq } from './dtos/create-bot-dto'
 import { BotAdminService } from './manage-bot-admin.service'
 
-@ApiTags('Manage-Bot')
-@Controller('manage-bot-admin')
-export class ManageBotAdminController {
+@ApiTags('Use-Bot')
+@Controller('use-bot-user')
+export class UseBotByUserController {
   constructor(
     private readonly botsService: BotAdminService,
     private readonly botBinanceTradeService: BotBinanceTradeService,
@@ -37,7 +37,7 @@ export class ManageBotAdminController {
     const { id, roles } = request.user.data
     if (roles !== AppRoles.ADMIN)
       throw new BadRequestException('Forbidden resource')
-    const allBot = await this.botsService.findAllAndCount(
+    const allBot = await this.botsService.findAllAndCountMapping(
       { user: id },
       page,
       size,
@@ -47,7 +47,7 @@ export class ManageBotAdminController {
 
   @Auth()
   @Post()
-  async createTokenBot(@Body() body: payloadBotReq, @Request() request) {
+  async createBotMapping(@Body() body: payloadBotReq, @Request() request) {
     const { id, email, roles } = request.user.data
     if (!id) throw new NotFoundException('User does not exists')
     if (

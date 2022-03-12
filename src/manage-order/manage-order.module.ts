@@ -12,7 +12,7 @@ import { User } from 'src/user/user.entity'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import { Ajax } from 'src/utils/ajax'
 import { BotBinanceTradeService } from '../public-trade/bot-binance-trade.service'
-import { BotsAdmin } from 'src/manage-bot-admin/manage-bots-admin.entity'
+import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
 
 @Module({
   imports: [

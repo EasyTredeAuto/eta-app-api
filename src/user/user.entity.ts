@@ -15,9 +15,9 @@ import { hash } from 'bcrypt'
 import { Orders } from 'src/manage-order/manage-orders.entity'
 import { AppRoles } from 'src/app.roles'
 import { Transaction } from 'src/public-trade/transaction-orders.entity'
-import { BotsAdmin } from 'src/manage-bot-admin/manage-bots-admin.entity'
-import { BotsUserMapping } from 'src/manage-bot-admin/use-bots-user.entity'
-import { transactionBotUserMapping } from 'src/manage-bot-admin/transaction-mapping.entity'
+import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
+import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
+import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transaction-mapping.entity'
 
 @Entity()
 export class User {

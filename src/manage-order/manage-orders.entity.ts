@@ -24,7 +24,7 @@ export class Orders {
   asset: string
   @Column({ type: 'varchar', length: 10 })
   currency: string
-  @Column()
+  @Column({ type: 'decimal', precision: 24, scale: 9 })
   amount: number
   @Column()
   amountType: string

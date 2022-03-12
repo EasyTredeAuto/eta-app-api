@@ -20,12 +20,10 @@ export class BotsUserMapping {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ type: 'decimal', precision: 24, scale: 9 })
   amount: number
   @Column()
   amountType: string
-  @Column()
-  side: string
   @Column()
   type: string
 

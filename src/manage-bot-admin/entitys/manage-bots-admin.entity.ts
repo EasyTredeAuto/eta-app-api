@@ -60,7 +60,4 @@ export class BotsAdmin {
     (user: transactionBotUserMapping) => user.id,
   )
   transactionMappings: transactionBotUserMapping[]
-
-  // @OneToMany(() => Transaction, (transaction: Transaction) => transaction.id)
-  // transactions: Transaction[]
 }

@@ -13,7 +13,7 @@ export class payloadBotReq {
   currency: string
 }
 export class payloadUpdateBotReq {
-  @IsString()
+  @IsNumber()
   id: number
   @IsString()
   symbol: string
@@ -47,7 +47,7 @@ export class payloadBotToken {
   id: number
   @IsNumber()
   email: string
-  @IsString()
+  @IsNumber()
   botId: number
   @IsString()
   side: string

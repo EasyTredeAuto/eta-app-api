@@ -5,7 +5,7 @@ import { ConfigService } from '@nestjs/config'
 import env from 'src/utils/env'
 import { JwtModule } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
-import { BotsAdmin } from './manage-bots-admin.entity'
+import { BotsAdmin } from './entitys/manage-bots-admin.entity'
 import { User } from 'src/user/user.entity'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 import { Transaction } from 'src/public-trade/transaction-orders.entity'
@@ -13,8 +13,9 @@ import { Orders } from 'src/manage-order/manage-orders.entity'
 import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
 import { UserService } from 'src/user/user.service'
 import { Ajax } from 'src/utils/ajax'
-import { BotsUserMapping } from './use-bots-user.entity'
-import { transactionBotUserMapping } from './transaction-mapping.entity'
+import { BotsUserMapping } from './entitys/use-bots-user.entity'
+import { transactionBotUserMapping } from './entitys/transaction-mapping.entity'
+import { UseBotByUserController } from './use-bot-user.controller'
 
 @Module({
   imports: [
@@ -42,6 +43,6 @@ import { transactionBotUserMapping } from './transaction-mapping.entity'
     UserService,
     Ajax,
   ],
-  controllers: [ManageBotAdminController],
+  controllers: [ManageBotAdminController, UseBotByUserController],
 })
 export class BotAdminModule {}

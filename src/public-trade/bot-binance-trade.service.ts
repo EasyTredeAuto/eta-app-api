@@ -12,7 +12,7 @@ import {
   payloadBotUpdateReq,
   payloadUpdateBotReq,
 } from 'src/manage-bot-admin/dtos/create-bot-dto'
-import { BotsAdmin } from 'src/manage-bot-admin/manage-bots-admin.entity'
+import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
 import {
   payloadOrderReq,
   payloadOrderUpdateReq,
