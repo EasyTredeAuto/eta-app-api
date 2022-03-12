@@ -45,6 +45,12 @@ export class payloadBotUpdateReq {
 export class payloadBotToken {
   @IsNumber()
   id: number
+  @IsNumber()
+  email: string
+  @IsString()
+  botId: number
+  @IsString()
+  side: string
   @IsString()
   symbol: string
   @IsString()
@@ -55,8 +61,4 @@ export class payloadBotToken {
   asset: string
   @IsString()
   currency: string
-  @IsString()
-  botId: number
-  @IsString()
-  side: number
 }

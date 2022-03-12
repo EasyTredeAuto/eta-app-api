@@ -16,6 +16,8 @@ import { Orders } from 'src/manage-order/manage-orders.entity'
 import { AppRoles } from 'src/app.roles'
 import { Transaction } from 'src/public-trade/transaction-orders.entity'
 import { BotsAdmin } from 'src/manage-bot-admin/manage-bots-admin.entity'
+import { BotsUserMapping } from 'src/manage-bot-admin/use-bots-user.entity'
+import { transactionBotUserMapping } from 'src/manage-bot-admin/transaction-mapping.entity'
 
 @Entity()
 export class User {
@@ -54,10 +56,16 @@ export class User {
   bot: BotsAdmin
 
   @JoinColumn()
+  botUserMapping: BotsUserMapping
+
+  @JoinColumn()
   order: Orders
 
   @JoinColumn()
   transaction: Orders
+
+  @JoinColumn()
+  transactionMapping: transactionBotUserMapping
 
   @OneToMany(() => BotsAdmin, (bot: BotsAdmin) => bot.id)
   bots: BotsAdmin[]
@@ -67,4 +75,13 @@ export class User {
 
   @OneToMany(() => Transaction, (transaction: Transaction) => transaction.id)
   transactions: Transaction[]
+
+  @OneToMany(() => BotsUserMapping, (mapping: BotsUserMapping) => mapping.id)
+  botUserMappings: BotsUserMapping[]
+
+  @OneToMany(
+    () => transactionBotUserMapping,
+    (mapping: transactionBotUserMapping) => mapping.id,
+  )
+  transactionMappings: transactionBotUserMapping[]
 }
