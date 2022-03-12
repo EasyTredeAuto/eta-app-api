@@ -12,6 +12,20 @@ export class payloadBotReq {
   @IsString()
   currency: string
 }
+export class payloadUpdateBotReq {
+  @IsString()
+  id: number
+  @IsString()
+  symbol: string
+  @IsString()
+  name: string
+  @IsString()
+  detail: string
+  @IsString()
+  asset: string
+  @IsString()
+  currency: string
+}
 
 export class payloadBotUpdateReq {
   @IsNumber()

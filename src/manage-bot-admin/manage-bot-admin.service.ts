@@ -19,9 +19,23 @@ export class BotAdminService {
     })
     return { data: result, count: total }
   }
+  async findAll(where: any, page: number, size: number) {
+    const result = await this.mangeBotRepository.find({
+      where,
+      order: { createdAt: 'DESC' },
+      take: size,
+      skip: page * size,
+    })
+    return { data: result }
+  }
   async findOne(id: number) {
     return await this.mangeBotRepository.findOne({
       where: { id },
+    })
+  }
+  async delete(id: number) {
+    return await this.mangeBotRepository.softDelete({
+      id,
     })
   }
 }

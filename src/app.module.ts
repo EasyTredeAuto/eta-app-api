@@ -13,6 +13,7 @@ import { PublicTradeModule } from './public-trade/public-trade.module'
 import { UserModule } from './user/user.module'
 import { APP_GUARD } from '@nestjs/core'
 import { TransactionModule } from './transaction/transaction.module'
+import { BotAdminModule } from './manage-bot-admin/manage-bot-admin.module'
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { TransactionModule } from './transaction/transaction.module'
     UserModule,
     BinanceCoinModule,
     OrderUserModule,
+    BotAdminModule,
     PublicTradeModule,
     TransactionModule,
   ],

@@ -10,6 +10,7 @@ import {
   payloadBotReq,
   payloadBotToken,
   payloadBotUpdateReq,
+  payloadUpdateBotReq,
 } from 'src/manage-bot-admin/dtos/create-bot-dto'
 import { BotsAdmin } from 'src/manage-bot-admin/manage-bots-admin.entity'
 import {
@@ -255,7 +256,7 @@ export class BotBinanceTradeService {
 
   async createBotByAdmin(userId: number, body: payloadBotReq) {
     const user = await this.userService.findOne({ id: userId })
-    const order = {
+    const bot = {
       user: user,
       name: body.name,
       detail: body.detail,
@@ -263,9 +264,9 @@ export class BotBinanceTradeService {
       asset: body.asset,
       currency: body.currency,
     } as BotsAdmin
-    if (!order.user)
+    if (!bot.user)
       throw new NotFoundException("can't build token, is query failed")
-    const data = await this.mangeBotsRepository.create(order)
+    const data = await this.mangeBotsRepository.create(bot)
     const newBot = await this.mangeBotsRepository.save(data)
     delete newBot.createdAt
     delete newBot.deletedAt
@@ -286,6 +287,40 @@ export class BotBinanceTradeService {
       { id: newBot.id },
       { urlBuy, urlSell },
     )
+    return { urlBuy, urlSell }
+  }
+
+  async updateBotByAdmin(userId: number, body: payloadUpdateBotReq) {
+    const user = await this.userService.findOne({ id: userId })
+    const isBot = await this.mangeBotsRepository.findOne({
+      where: { id: body.id },
+    })
+    if (!isBot)
+      throw new NotFoundException("can't build token, is query failed")
+    const bot = {
+      user: user,
+      name: body.name,
+      detail: body.detail,
+      symbol: body.asset + body.currency,
+      asset: body.asset,
+      currency: body.currency,
+    } as BotsAdmin
+    if (!bot.user)
+      throw new NotFoundException("can't build token, is query failed")
+    const payloadBuy = await Object.assign(
+      { id: user.id, email: user.email, botId: body.id, side: 'buy' },
+      body,
+    )
+    const payloadSell = await Object.assign(
+      { id: user.id, email: user.email, botId: body.id, side: 'sell' },
+      body,
+    )
+    const tokenBuy = this.jwtService.sign(payloadBuy)
+    const tokenSell = this.jwtService.sign(payloadSell)
+    const urlBuy = `http://localhost:80/public-trade/order/admin?token=${tokenBuy}`
+    const urlSell = `http://localhost:80/public-trade/order/admin?token=${tokenSell}`
+    const newUpdate = Object.assign(bot, { urlBuy, urlSell })
+    await this.mangeBotsRepository.update({ id: body.id }, newUpdate)
     return { urlBuy, urlSell }
   }
 

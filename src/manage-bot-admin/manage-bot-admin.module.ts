@@ -8,10 +8,15 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { BotsAdmin } from './manage-bots-admin.entity'
 import { User } from 'src/user/user.entity'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
+import { Transaction } from 'src/public-trade/transaction-orders.entity'
+import { Orders } from 'src/manage-order/manage-orders.entity'
+import { BinanceCoinService } from 'src/binance-coin/binance-coin.service'
+import { UserService } from 'src/user/user.service'
+import { Ajax } from 'src/utils/ajax'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([BotsAdmin, User]),
+    TypeOrmModule.forFeature([BotsAdmin, Transaction, Orders, User]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -21,7 +26,13 @@ import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.servi
     }),
     CacheModule.register(),
   ],
-  providers: [BotAdminService, BotBinanceTradeService],
+  providers: [
+    BotAdminService,
+    BotBinanceTradeService,
+    BinanceCoinService,
+    UserService,
+    Ajax,
+  ],
   controllers: [ManageBotAdminController],
 })
-export class ManageBotAdminModule {}
+export class BotAdminModule {}
