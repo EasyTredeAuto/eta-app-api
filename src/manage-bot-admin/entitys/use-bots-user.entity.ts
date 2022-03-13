@@ -45,7 +45,9 @@ export class BotsUserMapping {
   @ManyToOne(() => User, (user: User) => user.botUserMappings)
   user: User
 
-  @ManyToOne(() => BotsAdmin, (bot: BotsAdmin) => bot.botMappingUsers)
+  @ManyToOne(() => BotsAdmin, (bot: BotsAdmin) => bot.botMappingUsers, {
+    cascade: true,
+  })
   bot: BotsAdmin
 
   @OneToMany(

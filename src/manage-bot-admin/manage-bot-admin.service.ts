@@ -76,6 +76,7 @@ export class BotAdminService {
       res.detail = optionBot.detail
       result.push(res)
     }
+
     return { data: result, count: total }
   }
   async findAllMapping(where: any, page: number, size: number) {
@@ -84,6 +85,7 @@ export class BotAdminService {
       order: { createdAt: 'DESC' },
       take: size,
       skip: page * size,
+      // join: {innerJoinAndSelect: BotsAdmin.name}
     })
     return { data: result }
   }
