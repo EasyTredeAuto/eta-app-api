@@ -76,7 +76,6 @@ export class BotAdminService {
       res.detail = optionBot.detail
       result.push(res)
     }
-
     return { data: result, count: total }
   }
   async findAllMapping(where: any, page: number, size: number) {
@@ -85,7 +84,6 @@ export class BotAdminService {
       order: { createdAt: 'DESC' },
       take: size,
       skip: page * size,
-      // join: {innerJoinAndSelect: BotsAdmin.name}
     })
     return { data: result }
   }
@@ -109,6 +107,7 @@ export class BotAdminService {
       type: data.type,
       bot: bot,
       botIds: bot.id,
+      userIds: user.id,
       user: user,
     } as BotsUserMapping
     const preBot = await this.useBotRepository.create(botMapping)
@@ -147,6 +146,7 @@ export class BotAdminService {
       bot: bot,
       user: user,
       botIds: data.botId,
+      userIds: user.id,
     } as BotsUserMapping
     await this.useBotRepository.update({ id: data.id }, botMapping)
     return await this.useBotRepository.findOne({ where: { id: data.id } })

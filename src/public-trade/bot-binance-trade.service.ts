@@ -13,12 +13,15 @@ import {
   payloadUpdateBotReq,
 } from 'src/manage-bot-admin/dtos/create-bot-dto'
 import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
+import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transaction-mapping.entity'
+import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
 import {
   payloadOrderReq,
   payloadOrderUpdateReq,
 } from 'src/manage-order/dtos/create-bot-user-dto'
 import { payloadOrderDe } from 'src/manage-order/dtos/decode-payload.dto'
 import { Orders } from 'src/manage-order/manage-orders.entity'
+import { User } from 'src/user/user.entity'
 import { UserService } from 'src/user/user.service'
 import { Repository } from 'typeorm'
 import { Transaction } from './transaction-orders.entity'
@@ -28,10 +31,16 @@ export class BotBinanceTradeService {
   constructor(
     @InjectRepository(Transaction)
     private transactionRepository: Repository<Transaction>,
+    @InjectRepository(transactionBotUserMapping)
+    private transactionBotUserMappingRepository: Repository<transactionBotUserMapping>,
     @InjectRepository(Orders)
     private mangeOrdersRepository: Repository<Orders>,
     @InjectRepository(BotsAdmin)
     private mangeBotsRepository: Repository<BotsAdmin>,
+    @InjectRepository(BotsUserMapping)
+    private botsUserMapping: Repository<BotsUserMapping>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
     private readonly binanceService: BinanceCoinService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
@@ -41,6 +50,15 @@ export class BotBinanceTradeService {
     await this.mangeOrdersRepository
       .createQueryBuilder()
       .update('manage_order')
+      .set({ round: () => `round + 1` })
+      .where('id = :id', { id })
+      .execute()
+  }
+
+  async roundMappingUpdate(id: number) {
+    await this.botsUserMapping
+      .createQueryBuilder()
+      .update('bots_user_mapping')
       .set({ round: () => `round + 1` })
       .where('id = :id', { id })
       .execute()
@@ -331,5 +349,187 @@ export class BotBinanceTradeService {
     })
     if (!data) throw new BadRequestException('bot does not active')
     return result
+  }
+
+  async getUserMapping(botData) {
+    try {
+      const mappings = await this.botsUserMapping.find({
+        where: { bot: botData.botId, active: true },
+      })
+      const user = await this.userRepository.find()
+      const mappingss = JSON.parse(JSON.stringify(mappings))
+      for (const map of mappingss) {
+        const User = JSON.parse(JSON.stringify(user)).find(
+          (x) => x.id === map.userIds,
+        )
+        map.email = User.email
+        map.user = User
+      }
+      return mappingss
+    } catch (error) {
+      throw new NotFoundException('user does not exists')
+    }
+  }
+
+  async createOrderBotBuyLimit(botData, mapping) {
+    if (!mapping.user) throw new NotFoundException('user does not exists')
+    const { symbol, currency } = botData
+    const { amount, amountType } = mapping
+    let isAmount
+    const balance = await this.binanceService.freeBalance(mapping.email)
+    const market = await this.binanceService.getListCoinPrice(symbol)
+    const price = parseFloat(market.price) - 50
+    if (amountType === 'amount') isAmount = parseFloat(amount) / price
+    else
+      isAmount =
+        (parseFloat(balance.total[currency]) * (parseFloat(amount) / 100)) /
+        price
+    if (balance.total[currency] < isAmount * price)
+      throw new BadRequestException("can't buy limit in whit balance")
+    const order = await this.binanceService.createLimitBuyOrder(
+      mapping.email,
+      symbol,
+      isAmount,
+      price,
+    )
+    const transaction = {
+      symbol,
+      amount,
+      quantity: order.amount,
+      price: order.price,
+      side: 'buy',
+      type: order.type,
+      bot: botData,
+      user: mapping.user,
+      mapping: mapping,
+    } as transactionBotUserMapping
+    const isTransaction = await this.transactionBotUserMappingRepository.create(
+      transaction,
+    )
+    const newTransaction = await this.transactionBotUserMappingRepository.save(
+      isTransaction,
+    )
+    await this.roundMappingUpdate(mapping.id)
+    return newTransaction
+  }
+
+  async createOrderBotSellLimit(botData, mapping) {
+    if (!mapping.user) throw new NotFoundException('user does not exists')
+    const { symbol, currency, asset } = botData
+    const { amount, amountType } = mapping
+    let isAmount
+    const balance = await this.binanceService.freeBalance(mapping.email)
+    const market = await this.binanceService.getListCoinPrice(symbol)
+    const price = parseFloat(market.price)
+    if (amountType === 'amount') isAmount = amount / price
+    else
+      isAmount = (parseFloat(balance.total[currency]) * (amount / 100)) / price
+    if ((balance.total[asset] || 0) < isAmount)
+      throw new BadRequestException("can't sell limit in whit balance")
+    const order = await this.binanceService.createLimitSellOrder(
+      mapping.email,
+      symbol,
+      isAmount,
+      price,
+    )
+    const transaction = {
+      symbol,
+      amount,
+      quantity: order.amount,
+      price: order.price,
+      side: 'sell',
+      type: order.type,
+      bot: botData,
+      user: mapping.user,
+      mapping: mapping,
+    } as transactionBotUserMapping
+    const isTransaction = await this.transactionBotUserMappingRepository.create(
+      transaction,
+    )
+    const newTransaction = await this.transactionBotUserMappingRepository.save(
+      isTransaction,
+    )
+    await this.roundMappingUpdate(mapping.id)
+    return newTransaction
+  }
+
+  async createOrderBotBuyMarket(botData, mapping) {
+    if (!mapping.user) throw new NotFoundException('user does not exists')
+    const { symbol, currency, asset } = botData
+    const { amount, amountType } = mapping
+    let isAmount
+    const balance = await this.binanceService.freeBalance(mapping.email)
+    const market = await this.binanceService.getListCoinPrice(symbol)
+    const price = parseFloat(market.price)
+    if (amountType === 'amount') isAmount = amount / price
+    else
+      isAmount = (parseFloat(balance.total[currency]) * (amount / 100)) / price
+    if ((balance.total[asset] || 0) < isAmount)
+      throw new BadRequestException("can't buy market in whit balance")
+    const order = await this.binanceService.createMarketOrder(
+      mapping.email,
+      symbol,
+      'BUY',
+      isAmount,
+    )
+    const transaction = {
+      symbol,
+      amount,
+      quantity: order.amount,
+      price: order.price,
+      side: 'buy',
+      type: order.type,
+      bot: botData,
+      user: mapping.user,
+      mapping: mapping,
+    } as transactionBotUserMapping
+    const isTransaction = await this.transactionBotUserMappingRepository.create(
+      transaction,
+    )
+    const newTransaction = await this.transactionBotUserMappingRepository.save(
+      isTransaction,
+    )
+    await this.roundMappingUpdate(mapping.id)
+    return newTransaction
+  }
+
+  async createOrderBotSellMarket(botData, mapping) {
+    if (!mapping.user) throw new NotFoundException('user does not exists')
+    const { symbol, currency, asset } = botData
+    const { amount, amountType } = mapping
+    let isAmount
+    const balance = await this.binanceService.freeBalance(mapping.email)
+    const market = await this.binanceService.getListCoinPrice(symbol)
+    const price = parseFloat(market.price)
+    if (amountType === 'amount') isAmount = amount / price
+    else
+      isAmount = (parseFloat(balance.total[currency]) * (amount / 100)) / price
+    if ((balance.total[asset] || 0) < isAmount)
+      throw new BadRequestException("can't sell market in whit balance")
+    const order = await this.binanceService.createMarketOrder(
+      mapping.email,
+      symbol,
+      'SELL',
+      isAmount,
+    )
+    const transaction = {
+      symbol,
+      amount,
+      quantity: order.amount,
+      price: order.price,
+      side: 'sell',
+      type: order.type,
+      bot: botData,
+      user: mapping.user,
+      mapping: mapping,
+    } as transactionBotUserMapping
+    const isTransaction = await this.transactionBotUserMappingRepository.create(
+      transaction,
+    )
+    const newTransaction = await this.transactionBotUserMappingRepository.save(
+      isTransaction,
+    )
+    await this.roundMappingUpdate(mapping.id)
+    return newTransaction
   }
 }

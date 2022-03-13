@@ -5,6 +5,7 @@ import {
   DeleteDateColumn,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -21,6 +22,10 @@ export class BotsUserMapping {
   id: number
   @Column()
   botIds: number
+  @Column()
+  userIds: number
+  @Column({ default: 0 })
+  round: number
 
   @Column({ type: 'decimal', precision: 24, scale: 9 })
   amount: number

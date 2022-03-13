@@ -15,10 +15,18 @@ import { PublicTradeController } from './public-trade.controller'
 import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
 import { BotAdminService } from 'src/manage-bot-admin/manage-bot-admin.service'
 import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
+import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transaction-mapping.entity'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Orders, BotsAdmin, Transaction, BotsUserMapping, User]),
+    TypeOrmModule.forFeature([
+      Orders,
+      BotsAdmin,
+      Transaction,
+      BotsUserMapping,
+      User,
+      transactionBotUserMapping,
+    ]),
     JwtModule.registerAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({

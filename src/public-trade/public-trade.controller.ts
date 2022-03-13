@@ -15,6 +15,9 @@ import { ApiTags } from '@nestjs/swagger'
 import { OrderUserService } from 'src/manage-order/manage-order.service'
 import { BotAdminService } from 'src/manage-bot-admin/manage-bot-admin.service'
 import { payloadBotToken } from 'src/manage-bot-admin/dtos/create-bot-dto'
+import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
+import { Repository } from 'typeorm'
+import { InjectRepository } from '@nestjs/typeorm'
 
 @ApiTags('Public trade')
 @Controller('public-trade')
@@ -61,6 +64,7 @@ export class PublicTradeController {
     const result = (await this.botBinanceTradeService.decodeBotToken(
       token,
     )) as payloadBotToken
+
     if (
       !result ||
       !result.botId ||
@@ -69,18 +73,34 @@ export class PublicTradeController {
       !result.currency
     )
       throw new BadRequestException('token does not used')
-    const order = await this.botsRepository.findOne(result.botId)
-    if (!order) throw new NotFoundException('Bot does not exists')
+    const body = await this.botsRepository.findOne({
+      id: result.botId,
+      active: true,
+    })
+    if (!body) throw new NotFoundException('Bot does not exists')
+    const mappings = await this.botBinanceTradeService.getUserMapping(result)
+    if (!mappings) throw new NotFoundException('Bot mapping does not exists')
+    let tasks = []
+    for (const map of mappings) {
+      if (result.side === 'buy' && map.type === 'limit') {
+        const task = this.botBinanceTradeService.createOrderBotBuyLimit(
+          result,
+          map,
+        )
+        tasks.push(task)
+      }
+      if (result.side === 'sell' && map.type === 'limit') {
+      }
+      //   res = await this.botBinanceTradeService.createOrderSellLimit(result)
+      if (result.side === 'buy' && map.type === 'market') {
+      }
+      //   res = await this.botBinanceTradeService.createOrderBuyMarket(result)
+      if (result.side === 'sell' && map.type === 'market') {
+      }
+      //   res = await this.botBinanceTradeService.createOrderSellMarket(result)
+    }
+    await Promise.all(tasks)
 
-    let res
-    // if (result.side === 'buy' && result.type === 'limit')
-    //   res = await this.botBinanceTradeService.createOrderBuyLimit(result)
-    // if (result.side === 'sell' && result.type === 'limit')
-    //   res = await this.botBinanceTradeService.createOrderSellLimit(result)
-    // if (result.side === 'buy' && result.type === 'market')
-    //   res = await this.botBinanceTradeService.createOrderBuyMarket(result)
-    // if (result.side === 'sell' && result.type === 'market')
-    //   res = await this.botBinanceTradeService.createOrderSellMarket(result)
-    return { message: 'bot trade success', data: order }
+    return { message: 'bot trade success', data: body }
   }
 }

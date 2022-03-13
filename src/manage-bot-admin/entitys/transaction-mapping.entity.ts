@@ -37,7 +37,7 @@ export class transactionBotUserMapping {
   @ManyToOne(() => User, (user: User) => user.transactionMappings)
   user: User
 
-  @ManyToOne(() => User, (user: User) => user.transactionMappings)
+  @ManyToOne(() => BotsAdmin, (user: BotsAdmin) => user.transactionMappings)
   bot: BotsAdmin
 
   @ManyToOne(
