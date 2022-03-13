@@ -118,21 +118,20 @@ export class BotAdminService {
     const user_bot = await this.useBotRepository.findOne({
       where: { id: data.id },
     })
+
     if (user_bot.botIds !== data.botId) {
-      const bot_admin = await this.mangeBotRepository.findOne({
-        where: { id: user_bot.botIds },
-      })
-      const new_bot_admin = await this.mangeBotRepository.findOne({
-        where: { id: data.botId },
-      })
-      await this.mangeBotRepository.update(
-        { id: data.botId },
-        { round: new_bot_admin.round + 1 },
-      )
-      await this.mangeBotRepository.update(
-        { id: user_bot.botIds },
-        { round: bot_admin.round - 1 },
-      )
+      await this.mangeBotRepository
+        .createQueryBuilder()
+        .update('bots_admin')
+        .set({ round: () => `round + 1` })
+        .where('id = :id', { id: data.botId })
+        .execute()
+      await this.mangeBotRepository
+        .createQueryBuilder()
+        .update('bots_admin')
+        .set({ round: () => `round - 1` })
+        .where('id = :id', { id: user_bot.botIds })
+        .execute()
     }
 
     const user = await this.userRepository.findOne({ where: { id: userId } })
