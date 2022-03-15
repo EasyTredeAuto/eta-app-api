@@ -28,9 +28,9 @@ export class BotsAdmin {
   currency: string
   @Column()
   detail: string
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'text', nullable: true })
   urlBuy: string
-  @Column({ type: 'varchar', length: 500, nullable: true })
+  @Column({ type: 'text', nullable: true })
   urlSell: string
   @Column({ default: true })
   active: boolean

@@ -225,7 +225,7 @@ export class BotBinanceTradeService {
       body,
     )
     const token = this.jwtService.sign(payload)
-    const url = `http://localhost:80/public-trade/order?token=${token}`
+    const url = `http://159.223.65.62:80/public-trade/order?token=${token}`
     await this.mangeOrdersRepository.update({ id: newBot.id }, { url })
     return url
   }
@@ -239,7 +239,7 @@ export class BotBinanceTradeService {
       body,
     )
     const token = this.jwtService.sign(payload)
-    const url = `http://localhost:80/public-trade/order?token=${token}`
+    const url = `http://159.223.65.62:80/public-trade/order?token=${token}`
     const bot = {
       name: body.name,
       symbol: body.asset + body.currency,
@@ -299,8 +299,8 @@ export class BotBinanceTradeService {
     )
     const tokenBuy = this.jwtService.sign(payloadBuy)
     const tokenSell = this.jwtService.sign(payloadSell)
-    const urlBuy = `http://localhost:80/public-trade/order/admin?token=${tokenBuy}`
-    const urlSell = `http://localhost:80/public-trade/order/admin?token=${tokenSell}`
+    const urlBuy = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenBuy}`
+    const urlSell = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenSell}`
     await this.mangeBotsRepository.update(
       { id: newBot.id },
       { urlBuy, urlSell },
@@ -335,8 +335,8 @@ export class BotBinanceTradeService {
     )
     const tokenBuy = this.jwtService.sign(payloadBuy)
     const tokenSell = this.jwtService.sign(payloadSell)
-    const urlBuy = `http://localhost:80/public-trade/order/admin?token=${tokenBuy}`
-    const urlSell = `http://localhost:80/public-trade/order/admin?token=${tokenSell}`
+    const urlBuy = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenBuy}`
+    const urlSell = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenSell}`
     const newUpdate = Object.assign(bot, { urlBuy, urlSell })
     await this.mangeBotsRepository.update({ id: body.id }, newUpdate)
     return { urlBuy, urlSell }

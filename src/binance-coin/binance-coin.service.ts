@@ -27,9 +27,8 @@ export class BinanceCoinService {
   async _getExchangeInstance(email: string, exchange: string): Promise<ccxt.Exchange> {
     const user = await this.userService.findSecret({ email })
     const userKeys = await this.apiSettingRepository.findOne({
-      where: { id: user.id, exchange },
+      where: { user: user.id, exchange },
     })
-
     const keys = {
       akey: userKeys.apiKey,
       skey: userKeys.secretKey,
