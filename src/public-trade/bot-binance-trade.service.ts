@@ -70,7 +70,7 @@ export class BotBinanceTradeService {
     let isAmount
     const balance = await this.binanceService.freeBalance(email)
     const market = await this.binanceService.getListCoinPrice(symbol)
-    const price = parseFloat(market.price) - 50
+    const price = parseFloat(market.price)
     if (amountType === 'amount') isAmount = amount / price
     else
       isAmount = (parseFloat(balance.total[currency]) * (amount / 100)) / price
@@ -378,7 +378,7 @@ export class BotBinanceTradeService {
     let isAmount
     const balance = await this.binanceService.freeBalance(mapping.email)
     const market = await this.binanceService.getListCoinPrice(symbol)
-    const price = parseFloat(market.price) - 50
+    const price = parseFloat(market.price)
     if (amountType === 'amount') isAmount = parseFloat(amount) / price
     else
       isAmount =
