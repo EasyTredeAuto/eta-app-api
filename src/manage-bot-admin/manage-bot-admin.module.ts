@@ -16,6 +16,7 @@ import { Ajax } from 'src/utils/ajax'
 import { BotsUserMapping } from './entitys/use-bots-user.entity'
 import { transactionBotUserMapping } from './entitys/transaction-mapping.entity'
 import { UseBotByUserController } from './use-bot-user.controller'
+import { ApiSetting } from 'src/setting-api/setting-api.entity'
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UseBotByUserController } from './use-bot-user.controller'
       transactionBotUserMapping,
       Orders,
       User,
+      ApiSetting,
     ]),
     JwtModule.registerAsync({
       inject: [ConfigService],

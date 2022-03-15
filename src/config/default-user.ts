@@ -1,11 +1,13 @@
 import { ConfigService } from '@nestjs/config'
 import { AppRoles } from 'src/app.roles'
+import { ApiSetting } from 'src/setting-api/setting-api.entity'
 import { User } from 'src/user/user.entity'
 import env from 'src/utils/env'
 import { getRepository } from 'typeorm'
 
 export const setDefaultUser = async (config: ConfigService) => {
   const userRepository = getRepository<User>(User)
+  const apiRepository = getRepository<ApiSetting>(ApiSetting)
 
   const defaultUser = await userRepository
     .createQueryBuilder()
@@ -16,11 +18,19 @@ export const setDefaultUser = async (config: ConfigService) => {
     const adminUser = userRepository.create({
       email: config.get(env.DEFAULT_USER_EMAIL),
       password: config.get(env.DEFAULT_USER_PASSWORD),
-      binance_api: config.get(env.DEFAULT_API_KEY),
-      binance_secret_api: config.get(env.DEFAULT_SECRET_KEY),
       roles: AppRoles.ADMIN,
     }) as User
 
-    return await userRepository.save(adminUser)
+    const user = await userRepository.save(adminUser)
+
+    const apiUser = apiRepository.create({
+      exchange: config.get(env.DEFAULT_EXCHANGE),
+      secretKey: config.get(env.DEFAULT_SECRET_KEY),
+      apiKey: config.get(env.DEFAULT_API_KEY),
+      user: adminUser,
+    }) as ApiSetting
+    await apiRepository.save(apiUser)
+
+    return user
   }
 }

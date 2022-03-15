@@ -15,6 +15,7 @@ import { BotBinanceTradeService } from '../public-trade/bot-binance-trade.servic
 import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
 import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
 import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transaction-mapping.entity'
+import { ApiSetting } from 'src/setting-api/setting-api.entity'
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transact
       User,
       BotsUserMapping,
       transactionBotUserMapping,
+      ApiSetting,
     ]),
     JwtModule.registerAsync({
       inject: [ConfigService],

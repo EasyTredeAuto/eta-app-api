@@ -14,6 +14,7 @@ import { UserModule } from './user/user.module'
 import { APP_GUARD } from '@nestjs/core'
 import { TransactionModule } from './transaction/transaction.module'
 import { BotAdminModule } from './manage-bot-admin/manage-bot-admin.module'
+import { SettingApiModule } from './setting-api/setting-api.module'
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { BotAdminModule } from './manage-bot-admin/manage-bot-admin.module'
     BotAdminModule,
     PublicTradeModule,
     TransactionModule,
+    SettingApiModule,
   ],
   controllers: [AppController],
   providers: [AppService],

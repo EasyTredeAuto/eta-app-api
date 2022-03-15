@@ -33,8 +33,6 @@ export class UserService {
     return await this.userRepository
       .createQueryBuilder('user')
       .where(data)
-      .addSelect('user.binance_api')
-      .addSelect('user.binance_secret_api')
       .getOne()
   }
   async getMany() {
@@ -71,8 +69,6 @@ export class UserService {
     const newUser = await this.userRepository.create(body)
     const data = await this.userRepository.save(newUser)
     delete data.password
-    delete data.binance_secret_api
-    delete data.binance_api
     delete data.deletedAt
     delete data.active
     return data

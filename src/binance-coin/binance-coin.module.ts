@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { env } from 'process'
+import { ApiSetting } from 'src/setting-api/setting-api.entity'
 import { User } from 'src/user/user.entity'
 import { UserService } from 'src/user/user.service'
 import { Ajax } from 'src/utils/ajax'
@@ -11,7 +12,7 @@ import { BinanceCoinService } from './binance-coin.service'
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, ApiSetting]),
     CacheModule.register(),
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -21,7 +22,7 @@ import { BinanceCoinService } from './binance-coin.service'
       }),
     }),
   ],
-  controllers: [BinanceCoinController],
   providers: [BinanceCoinService, Ajax, UserService],
+  controllers: [BinanceCoinController],
 })
 export class BinanceCoinModule {}

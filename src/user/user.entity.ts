@@ -18,6 +18,7 @@ import { Transaction } from 'src/public-trade/transaction-orders.entity'
 import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
 import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
 import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transaction-mapping.entity'
+import { ApiSetting } from 'src/setting-api/setting-api.entity'
 
 @Entity()
 export class User {
@@ -27,10 +28,6 @@ export class User {
   email: string
   @Column({ type: 'varchar', length: 128, select: false })
   password: string
-  @Column({ type: 'varchar', length: 500, nullable: true, select: false })
-  binance_secret_api: string
-  @Column({ type: 'varchar', length: 500, nullable: true, select: false })
-  binance_api: string
 
   @Column({ default: AppRoles.AUTHOR })
   roles: string
@@ -65,10 +62,16 @@ export class User {
   transaction: Orders
 
   @JoinColumn()
+  apiKey: ApiSetting
+
+  @JoinColumn()
   transactionMapping: transactionBotUserMapping
 
   @OneToMany(() => BotsAdmin, (bot: BotsAdmin) => bot.id)
   bots: BotsAdmin[]
+
+  @OneToMany(() => ApiSetting, (api: ApiSetting) => api.id)
+  apiKeys: ApiSetting[]
 
   @OneToMany(() => Orders, (order: Orders) => order.id)
   orders: Orders[]
