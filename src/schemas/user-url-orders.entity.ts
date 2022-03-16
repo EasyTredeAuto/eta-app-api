@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 import {
   Column,
   CreateDateColumn,
@@ -10,7 +10,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Transaction } from '../public-trade/transaction-orders.entity'
+import { Transaction } from './user-url-orders-transaction.entity'
 
 @Entity()
 export class Orders {

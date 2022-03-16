@@ -11,7 +11,7 @@ import { HttpsProxyAgent } from 'https-proxy-agent'
 import * as ccxt from 'ccxt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
-import { ApiSetting } from 'src/setting-api/setting-api.entity'
+import { ApiSetting } from 'src/schemas/user-secret-api.entity'
 
 @Injectable()
 export class BinanceCoinService {

@@ -1,20 +1,17 @@
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
   JoinColumn,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { BotsAdmin } from './manage-bots-admin.entity'
-import { transactionBotUserMapping } from './transaction-mapping.entity'
-// import { Transaction } from '../public-trade/transaction-orders.entity'
+import { BotsAdmin } from './admin-bots.entity'
+import { transactionBotUserMapping } from './mapping-user-bots-transaction.entity'
 
 @Entity()
 export class BotsUserMapping {

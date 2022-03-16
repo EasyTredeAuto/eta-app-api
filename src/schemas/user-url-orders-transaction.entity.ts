@@ -1,20 +1,16 @@
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { BotsAdmin } from './manage-bots-admin.entity'
-import { BotsUserMapping } from './use-bots-user.entity'
-// import { Transaction } from '../public-trade/transaction-orders.entity'
+import { Orders } from './user-url-orders.entity'
 
 @Entity()
-export class transactionBotUserMapping {
+export class Transaction {
   @PrimaryGeneratedColumn()
   id: number
   @Column({ type: 'varchar', length: 10 })
@@ -34,15 +30,9 @@ export class transactionBotUserMapping {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date
 
-  @ManyToOne(() => User, (user: User) => user.transactionMappings)
+  @ManyToOne(() => Orders, (order: Orders) => order.transactions)
+  order: Orders
+
+  @ManyToOne(() => User, (user: User) => user.transactions)
   user: User
-
-  @ManyToOne(() => BotsAdmin, (user: BotsAdmin) => user.transactionMappings)
-  bot: BotsAdmin
-
-  @ManyToOne(
-    () => BotsUserMapping,
-    (bot: BotsUserMapping) => bot.transactionMappings,
-  )
-  mapping: BotsUserMapping
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common'
-import { Orders } from './manage-orders.entity'
+import { Orders } from '../schemas/user-url-orders.entity'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 

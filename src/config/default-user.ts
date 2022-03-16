@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config'
 import { AppRoles } from 'src/app.roles'
-import { ApiSetting } from 'src/setting-api/setting-api.entity'
-import { User } from 'src/user/user.entity'
+import { ApiSetting } from 'src/schemas/user-secret-api.entity'
+import { User } from 'src/schemas/user.entity'
 import env from 'src/utils/env'
 import { getRepository } from 'typeorm'
 

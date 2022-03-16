@@ -15,7 +15,7 @@ import { ApiTags } from '@nestjs/swagger'
 import { OrderUserService } from 'src/manage-order/manage-order.service'
 import { BotAdminService } from 'src/manage-bot-admin/manage-bot-admin.service'
 import { payloadBotToken } from 'src/manage-bot-admin/dtos/create-bot-dto'
-import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
+import { BotsUserMapping } from 'src/schemas/mapping-user-bots.entity'
 import { Repository } from 'typeorm'
 import { InjectRepository } from '@nestjs/typeorm'
 

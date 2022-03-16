@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 import {
   Column,
   CreateDateColumn,
@@ -7,10 +7,11 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { Orders } from '../manage-order/manage-orders.entity'
+import { BotsAdmin } from './admin-bots.entity'
+import { BotsUserMapping } from './mapping-user-bots.entity'
 
 @Entity()
-export class Transaction {
+export class transactionBotUserMapping {
   @PrimaryGeneratedColumn()
   id: number
   @Column({ type: 'varchar', length: 10 })
@@ -30,9 +31,15 @@ export class Transaction {
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date
 
-  @ManyToOne(() => Orders, (order: Orders) => order.transactions)
-  order: Orders
-
-  @ManyToOne(() => User, (user: User) => user.transactions)
+  @ManyToOne(() => User, (user: User) => user.transactionMappings)
   user: User
+
+  @ManyToOne(() => BotsAdmin, (user: BotsAdmin) => user.transactionMappings)
+  bot: BotsAdmin
+
+  @ManyToOne(
+    () => BotsUserMapping,
+    (bot: BotsUserMapping) => bot.transactionMappings,
+  )
+  mapping: BotsUserMapping
 }

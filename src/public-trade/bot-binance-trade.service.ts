@@ -12,19 +12,19 @@ import {
   payloadBotUpdateReq,
   payloadUpdateBotReq,
 } from 'src/manage-bot-admin/dtos/create-bot-dto'
-import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
-import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transaction-mapping.entity'
-import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
+import { BotsAdmin } from 'src/schemas/admin-bots.entity'
+import { transactionBotUserMapping } from 'src/schemas/mapping-user-bots-transaction.entity'
+import { BotsUserMapping } from 'src/schemas/mapping-user-bots.entity'
 import {
   payloadOrderReq,
   payloadOrderUpdateReq,
 } from 'src/manage-order/dtos/create-bot-user-dto'
 import { payloadOrderDe } from 'src/manage-order/dtos/decode-payload.dto'
-import { Orders } from 'src/manage-order/manage-orders.entity'
-import { User } from 'src/user/user.entity'
+import { Orders } from 'src/schemas/user-url-orders.entity'
+import { User } from 'src/schemas/user.entity'
 import { UserService } from 'src/user/user.service'
 import { Repository } from 'typeorm'
-import { Transaction } from './transaction-orders.entity'
+import { Transaction } from '../schemas/user-url-orders-transaction.entity'
 
 @Injectable()
 export class BotBinanceTradeService {

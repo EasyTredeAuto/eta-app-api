@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 import { Repository } from 'typeorm'
 import {
   payloadActiveBotMappingReq,
   payloadBotMappingReq,
   payloadUpdateBotMappingReq,
 } from './dtos/create-mapping'
-import { BotsAdmin } from './entitys/manage-bots-admin.entity'
-import { BotsUserMapping } from './entitys/use-bots-user.entity'
+import { BotsAdmin } from '../schemas/admin-bots.entity'
+import { BotsUserMapping } from '../schemas/mapping-user-bots.entity'
 
 @Injectable()
 export class BotAdminService {

@@ -10,7 +10,7 @@ import {
 import { ApiTags } from '@nestjs/swagger'
 import { AppRoles } from 'src/app.roles'
 import { Auth, User } from 'src/common/decorators'
-import { User as UserEntity } from 'src/user/user.entity'
+import { User as UserEntity } from 'src/schemas/user.entity'
 import { UserService } from 'src/user/user.service'
 import { AuthService } from './auth.service'
 import { LoginDto, RegisterDto } from './dtos'

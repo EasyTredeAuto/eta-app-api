@@ -6,7 +6,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 
 @Entity()
 export class ApiSetting {

@@ -4,9 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 import { Repository } from 'typeorm'
-import { ApiSetting } from './setting-api.entity'
+import { ApiSetting } from '../schemas/user-secret-api.entity'
 
 @Injectable()
 export class SettingApiService {

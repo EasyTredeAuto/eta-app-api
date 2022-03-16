@@ -8,7 +8,7 @@ import { RegisterDto } from 'src/auth/dtos'
 import { Repository } from 'typeorm'
 import { CreateUserDto } from './dtos/create-user.dto'
 import { EditUserDto } from './dtos/edit-user.dto'
-import { User } from './user.entity'
+import { User } from '../schemas/user.entity'
 
 export interface UserFindOne {
   id?: number

@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.entity'
+import { User } from 'src/schemas/user.entity'
 import {
   Column,
   CreateDateColumn,
@@ -10,9 +10,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm'
-import { transactionBotUserMapping } from './transaction-mapping.entity'
-import { BotsUserMapping } from './use-bots-user.entity'
-// import { Transaction } from '../public-trade/transaction-orders.entity'
+import { transactionBotUserMapping } from './mapping-user-bots-transaction.entity'
+import { BotsUserMapping } from './mapping-user-bots.entity'
 
 @Entity()
 export class BotsAdmin {

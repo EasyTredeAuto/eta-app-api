@@ -8,17 +8,16 @@ import {
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
-  Timestamp,
   UpdateDateColumn,
 } from 'typeorm'
 import { hash } from 'bcrypt'
-import { Orders } from 'src/manage-order/manage-orders.entity'
+import { Orders } from 'src/schemas/user-url-orders.entity'
 import { AppRoles } from 'src/app.roles'
-import { Transaction } from 'src/public-trade/transaction-orders.entity'
-import { BotsAdmin } from 'src/manage-bot-admin/entitys/manage-bots-admin.entity'
-import { BotsUserMapping } from 'src/manage-bot-admin/entitys/use-bots-user.entity'
-import { transactionBotUserMapping } from 'src/manage-bot-admin/entitys/transaction-mapping.entity'
-import { ApiSetting } from 'src/setting-api/setting-api.entity'
+import { Transaction } from 'src/schemas/user-url-orders-transaction.entity'
+import { BotsAdmin } from 'src/schemas/admin-bots.entity'
+import { BotsUserMapping } from 'src/schemas/mapping-user-bots.entity'
+import { transactionBotUserMapping } from 'src/schemas/mapping-user-bots-transaction.entity'
+import { ApiSetting } from 'src/schemas/user-secret-api.entity'
 
 @Entity()
 export class User {

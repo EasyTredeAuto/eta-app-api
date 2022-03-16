@@ -12,7 +12,7 @@ import { OrderUserModule } from './manage-order/manage-order.module'
 import { PublicTradeModule } from './public-trade/public-trade.module'
 import { UserModule } from './user/user.module'
 import { APP_GUARD } from '@nestjs/core'
-import { TransactionModule } from './transaction/transaction.module'
+import { TransactionModule } from './transactions/transaction.module'
 import { BotAdminModule } from './manage-bot-admin/manage-bot-admin.module'
 import { SettingApiModule } from './setting-api/setting-api.module'
 
