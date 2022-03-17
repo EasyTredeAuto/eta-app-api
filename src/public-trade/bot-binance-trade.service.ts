@@ -91,6 +91,7 @@ export class BotBinanceTradeService {
       side: 'buy',
       type: order.type,
       user: id,
+      orderIds: body.botId,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
@@ -125,6 +126,7 @@ export class BotBinanceTradeService {
       side: 'sell',
       type: order.type,
       user: id,
+      orderIds: body.botId,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
@@ -159,6 +161,7 @@ export class BotBinanceTradeService {
       side: 'buy',
       type: order.type,
       user: id,
+      orderIds: body.botId,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
@@ -193,6 +196,7 @@ export class BotBinanceTradeService {
       side: 'sell',
       type: order.type,
       user: id,
+      orderIds: body.botId,
     } as Transaction
     const isTransaction = await this.transactionRepository.create(transaction)
     const newTransaction = await this.transactionRepository.save(isTransaction)
@@ -402,6 +406,7 @@ export class BotBinanceTradeService {
       bot: botData,
       user: mapping.user,
       mapping: mapping,
+      botIds: botData.id
     } as transactionBotUserMapping
     const isTransaction = await this.transactionBotUserMappingRepository.create(
       transaction,
@@ -442,6 +447,7 @@ export class BotBinanceTradeService {
       bot: botData,
       user: mapping.user,
       mapping: mapping,
+      botIds: botData.id,
     } as transactionBotUserMapping
     const isTransaction = await this.transactionBotUserMappingRepository.create(
       transaction,
@@ -482,6 +488,7 @@ export class BotBinanceTradeService {
       bot: botData,
       user: mapping.user,
       mapping: mapping,
+      botIds: botData.id,
     } as transactionBotUserMapping
     const isTransaction = await this.transactionBotUserMappingRepository.create(
       transaction,
@@ -522,6 +529,7 @@ export class BotBinanceTradeService {
       bot: botData,
       user: mapping.user,
       mapping: mapping,
+      botIds: botData.id,
     } as transactionBotUserMapping
     const isTransaction = await this.transactionBotUserMappingRepository.create(
       transaction,

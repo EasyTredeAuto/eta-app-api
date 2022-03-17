@@ -13,6 +13,8 @@ import { Orders } from './user-url-orders.entity'
 export class Transaction {
   @PrimaryGeneratedColumn()
   id: number
+  @Column()
+  orderIds: number
   @Column({ type: 'varchar', length: 10 })
   symbol: string
   @Column({ type: 'decimal', precision: 24, scale: 9 })
@@ -21,10 +23,12 @@ export class Transaction {
   quantity: number
   @Column({ type: 'decimal', precision: 24, scale: 9 })
   price: number
-  @Column()
+  @Column({ type: 'varchar', length: 10 })
   side: string
-  @Column()
+  @Column({ type: 'varchar', length: 10 })
   type: string
+  @Column({ default: 'binance', type: 'varchar', length: 10 })
+  exchange: string
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
   @UpdateDateColumn({ type: 'timestamp' })

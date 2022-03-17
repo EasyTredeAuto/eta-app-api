@@ -14,6 +14,8 @@ import { BotsUserMapping } from './mapping-user-bots.entity'
 export class transactionBotUserMapping {
   @PrimaryGeneratedColumn()
   id: number
+  @Column()
+  botIds: number
   @Column({ type: 'varchar', length: 10 })
   symbol: string
   @Column({ type: 'decimal', precision: 24, scale: 9 })
@@ -22,10 +24,13 @@ export class transactionBotUserMapping {
   quantity: number
   @Column({ type: 'decimal', precision: 24, scale: 9 })
   price: number
-  @Column()
+  @Column({ type: 'varchar', length: 10 })
   side: string
-  @Column()
+  @Column({ type: 'varchar', length: 10 })
   type: string
+  @Column({ default: 'binance', type: 'varchar', length: 10 })
+  exchange: string
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date
   @UpdateDateColumn({ type: 'timestamp' })

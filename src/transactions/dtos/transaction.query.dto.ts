@@ -2,17 +2,21 @@ import { IsDateString, IsNumber, IsString } from 'class-validator'
 
 export class transactionQueryReq {
   @IsNumber()
-  bot: number
+  page: number
   @IsNumber()
-  user: number
+  size: number
+  @IsDateString()
+  from: Date
+  @IsDateString()
+  to: Date
+  @IsString()
+  exchange?: string
   @IsString()
   symbol?: string
-  @IsString()
-  name?: string
   @IsString()
   side?: string
   @IsString()
   type?: string
-//   @IsDateString()
-//   createdAt?: Date
+  //   @IsDateString()
+  //   createdAt?: Date
 }
