@@ -27,6 +27,4 @@ export class payloadUpdateBotMappingReq {
 export class payloadActiveBotMappingReq {
   @IsBoolean()
   active: boolean
-  @IsNumber()
-  botId: number
 }

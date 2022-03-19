@@ -16,6 +16,7 @@ import { Auth } from 'src/common/decorators'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 import { UserService } from 'src/user/user.service'
 import { payloadBotReq, payloadUpdateBotReq } from './dtos/create-bot-dto'
+import { payloadActiveBotMappingReq } from './dtos/create-mapping'
 import { BotAdminService } from './manage-bot-admin.service'
 
 @ApiTags('Manage-Bot')
@@ -109,6 +110,31 @@ export class ManageBotAdminController {
       body,
     )
     return { message: 'create bot success', ...url }
+  }
+
+  @Auth()
+  @Put('/:botId')
+  async activeBot(
+    @Body() body: payloadActiveBotMappingReq,
+    @Param('botId') botId: number,
+    @Request() request,
+  ) {
+    const { id, email } = request.user.data
+
+    if (!id) throw new NotFoundException('User does not exists')
+    const user = await this.userService.findOne({
+      id,
+      email,
+    })
+    if (!user) throw new NotFoundException('User does not exists')
+    const bot = await this.botsService.findOne({
+      id: botId,
+      user: id,
+    })
+    if (!bot)
+      return { message: 'This bot does not exist in your list.', data: false }
+    const data = await this.botsService.updateActive(botId, body)
+    return { message: 'successful', data }
   }
 
   @Auth()

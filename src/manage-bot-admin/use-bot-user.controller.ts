@@ -102,22 +102,20 @@ export class UseBotByUserController {
     @Request() request,
   ) {
     const { id, email } = request.user.data
+
     if (!id) throw new NotFoundException('User does not exists')
-    if (!body || !body.active || !body.botId)
-      throw new BadRequestException("can't use bot, is query failed")
     const user = await this.userService.findOne({
       id,
       email,
     })
     if (!user) throw new NotFoundException('User does not exists')
-    const mapping = await this.botsService.findOne({
+    const mapping = await this.botsService.findOneMapping({
       id: mappingId,
       user: id,
-      bot: body.botId,
     })
     if (!mapping)
       return { message: 'This bot does not exist in your list.', data: false }
-    const data = this.botsService.updateOneActive(mappingId, body)
+    const data = await this.botsService.updateOneActive(mappingId, body)
     return { message: 'successful', data }
   }
 

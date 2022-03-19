@@ -51,6 +51,10 @@ export class BotAdminService {
   async findOne(where) {
     return await this.mangeBotRepository.findOne({ where })
   }
+  async updateActive(id: number, data: payloadActiveBotMappingReq) {
+    await this.mangeBotRepository.update({ id }, { active: data.active })
+    return await this.mangeBotRepository.findOne({ where: { id } })
+  }
   async delete(id: number) {
     return await this.mangeBotRepository.softDelete({
       id,
