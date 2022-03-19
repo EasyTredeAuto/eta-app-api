@@ -25,6 +25,15 @@ export class SettingApiController {
   }
 
   @Auth()
+  @Get('/check')
+  async getCheckOneApi(@Request() request) {
+    const { id } = request.user.data
+    const api = await this.settingApiService.getOne({ user: id, active: true })
+    if (!api) throw new NotFoundException('Value does not exists')
+    return { message: 'api your is active', data: true }
+  }
+
+  @Auth()
   @Post()
   async createOneApi(@Request() request, @Body() body: payloadApiReq) {
     const { id } = request.user.data
