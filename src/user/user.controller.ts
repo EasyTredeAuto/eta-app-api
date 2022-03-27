@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
 } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
@@ -22,12 +23,18 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Auth()
-  @Get()
-  async getMany(@Request() request) {
+  @Get('/:page/:size')
+  async getMany(
+    @Param('page') page: number,
+    @Param('size') size: number,
+    @Query('search') search: string,
+    @Request() request,
+  ) {
     const { roles } = request.user.data
     if (roles !== AppRoles.ADMIN)
       throw new BadRequestException('Forbidden resource')
-    return this.userService.getMany()
+      console.log(search)
+    return this.userService.getMany(page, size, search)
   }
 
   @Auth()

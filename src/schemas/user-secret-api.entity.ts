@@ -14,6 +14,8 @@ export class ApiSetting {
   id: number
   @Column({ type: 'varchar', length: 128, select: false })
   exchange: string
+  @Column()
+  userIds: number
   @Column({ type: 'varchar', length: 500, nullable: true })
   apiKey: string
   @Column({ type: 'varchar', length: 500, nullable: true })

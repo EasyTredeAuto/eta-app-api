@@ -22,7 +22,7 @@ import { BinanceCoinService } from './binance-coin.service'
       }),
     }),
   ],
-  providers: [BinanceCoinService, Ajax, UserService],
+  providers: [BinanceCoinService, Ajax],
   controllers: [BinanceCoinController],
 })
 export class BinanceCoinModule {}

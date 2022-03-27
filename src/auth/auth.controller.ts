@@ -11,7 +11,6 @@ import { ApiTags } from '@nestjs/swagger'
 import { AppRoles } from 'src/app.roles'
 import { Auth, User } from 'src/common/decorators'
 import { User as UserEntity } from 'src/schemas/user.entity'
-import { UserService } from 'src/user/user.service'
 import { AuthService } from './auth.service'
 import { LoginDto, RegisterDto } from './dtos'
 import { LocalAuthGuard } from './guards/local-auth.guard'
@@ -20,7 +19,6 @@ import { LocalAuthGuard } from './guards/local-auth.guard'
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly userService: UserService,
     private readonly authService: AuthService,
   ) {}
 
@@ -49,7 +47,7 @@ export class AuthController {
     const { roles, id } = request.user.data
     if (roles === AppRoles.AUTHOR)
       throw new BadRequestException('Forbidden resource')
-    return this.userService.getOne(id)
+    return this.authService.getOne(id)
   }
 
   @Auth()

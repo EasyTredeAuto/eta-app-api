@@ -5,10 +5,11 @@ import {
 } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { RegisterDto } from 'src/auth/dtos'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import { CreateUserDto } from './dtos/create-user.dto'
 import { EditUserDto } from './dtos/edit-user.dto'
 import { User } from '../schemas/user.entity'
+import { ApiSetting } from 'src/schemas/user-secret-api.entity'
 
 export interface UserFindOne {
   id?: number
@@ -20,6 +21,8 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(ApiSetting)
+    private apiRepository: Repository<ApiSetting>,
   ) {}
 
   async findOne(data: UserFindOne) {
@@ -35,9 +38,21 @@ export class UserService {
       .where(data)
       .getOne()
   }
-  async getMany() {
-    const data = await this.userRepository.find()
-    return { message: 'Is all user', data }
+  async getMany(page, size, search) {
+    const [resultUser, count] = await this.userRepository.findAndCount({
+      where: { email: Like(`%${search}%`) },
+      order: { createdAt: 'DESC' },
+      take: size,
+      skip: page * size,
+    })
+    const resultApi = await this.apiRepository.find()
+    const users = JSON.parse(JSON.stringify(resultUser))
+    const apis = JSON.parse(JSON.stringify(resultApi))
+    for (const user of users) {
+      const isApi = apis.find((x) => x.userIds === user.id)
+      user.apiActive = isApi ? true : false
+    }
+    return { message: 'Is all user', data: users, count }
   }
   async getOne(id) {
     const data = await this.userRepository.findOne({ where: { id } })

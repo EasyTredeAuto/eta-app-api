@@ -5,18 +5,19 @@ import {
   Injectable,
 } from '@nestjs/common'
 import { Ajax } from 'src/utils/ajax'
-import { UserService } from 'src/user/user.service'
 import { ConfigService } from '@nestjs/config'
 import { HttpsProxyAgent } from 'https-proxy-agent'
 import * as ccxt from 'ccxt'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 import { ApiSetting } from 'src/schemas/user-secret-api.entity'
+import { User } from 'src/schemas/user.entity'
 
 @Injectable()
 export class BinanceCoinService {
   constructor(
-    private readonly userService: UserService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     @InjectRepository(ApiSetting)
     private readonly apiSettingRepository: Repository<ApiSetting>,
     private readonly configService: ConfigService,
@@ -24,8 +25,13 @@ export class BinanceCoinService {
     @Inject(CACHE_MANAGER) private readonly cacheManager: any,
   ) {}
 
-  async _getExchangeInstance(email: string, exchange: string): Promise<ccxt.Exchange> {
-    const user = await this.userService.findSecret({ email })
+  async _getExchangeInstance(
+    email: string,
+    exchange: string,
+  ): Promise<ccxt.Exchange> {
+    const user = await this.userRepository.createQueryBuilder('user')
+      .where({email})
+      .getOne()
     const userKeys = await this.apiSettingRepository.findOne({
       where: { user: user.id, exchange },
     })
@@ -64,7 +70,7 @@ export class BinanceCoinService {
     return coinsPrice
   }
   async getCoinAsset(email) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const result = await exchange.fetchBalance()
     const filteredObject = Object.keys(result.used)
     return filteredObject
@@ -77,7 +83,7 @@ export class BinanceCoinService {
     return coinsPrice
   }
   async freeBalance(email: string) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const result = await exchange.fetchBalance()
     const filteredObject = Object.keys(result.total).reduce(function (r, e) {
       if (result.total[e] > 0 && !e.startsWith('LD')) r[e] = result.total[e]
@@ -92,18 +98,18 @@ export class BinanceCoinService {
     return balance
   }
   async orders(email: string, symbol: string) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const result = await exchange.fetchOpenOrders(symbol, 50)
     const orders = result.map((res) => res.info)
     return orders
   }
   async cancelOrderId(email: string, symbol: string, orderid: string) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const result = await exchange.cancelOrder(orderid, symbol)
     return result
   }
   async cancelOrders(email: string, symbol: string) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const result = await exchange.cancelAllOrders(symbol)
     return result
   }
@@ -113,7 +119,7 @@ export class BinanceCoinService {
     amount: number,
     price: number,
   ) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const result = await exchange
       .createLimitBuyOrder(symbol, amount, price)
       .then((result) => result)
@@ -128,7 +134,7 @@ export class BinanceCoinService {
     amount: number,
     price: number,
   ) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const result = await exchange.createLimitSellOrder(symbol, amount, price)
     return result
   }
@@ -138,7 +144,7 @@ export class BinanceCoinService {
     side: string,
     amount: number,
   ) {
-    const exchange = await this._getExchangeInstance(email, "binance")
+    const exchange = await this._getExchangeInstance(email, 'binance')
     const isSide = side === 'BUY' ? 'buy' : 'sell'
     const result = await exchange.createMarketOrder(symbol, isSide, amount)
     return result

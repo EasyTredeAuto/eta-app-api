@@ -32,12 +32,12 @@ export class SettingApiService {
       secretKey: body.secretKey,
       exchange: body.exchange,
       user,
+      userIds: id,
     } as ApiSetting
     const newApi = await this.apiRepository.create(apiSetting)
     return await this.apiRepository.save(newApi)
   }
   async updateOne(id: number, body: any) {
     await this.apiRepository.update({ id }, { ...body })
-    return await this.apiRepository.findOne({ where: { id } })
   }
 }
