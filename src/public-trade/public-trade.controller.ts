@@ -7,17 +7,10 @@ import {
 } from '@nestjs/common'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 import { payloadOrderDe } from 'src/manage-order/dtos/decode-payload.dto'
-import {
-  payloadOrderReq,
-  payloadOrderUpdateReq,
-} from 'src/manage-order/dtos/create-bot-user-dto'
 import { ApiTags } from '@nestjs/swagger'
 import { OrderUserService } from 'src/manage-order/manage-order.service'
 import { BotAdminService } from 'src/manage-bot-admin/manage-bot-admin.service'
 import { payloadBotToken } from 'src/manage-bot-admin/dtos/create-bot-dto'
-import { BotsUserMapping } from 'src/schemas/mapping-user-bots.entity'
-import { Repository } from 'typeorm'
-import { InjectRepository } from '@nestjs/typeorm'
 
 @ApiTags('Public trade')
 @Controller('public-trade')
@@ -90,14 +83,26 @@ export class PublicTradeController {
         tasks.push(task)
       }
       if (result.side === 'sell' && map.type === 'limit') {
+        const task = this.botBinanceTradeService.createOrderBotSellLimit(
+          result,
+          map,
+        )
+        tasks.push(task)
       }
-      //   res = await this.botBinanceTradeService.createOrderSellLimit(result)
       if (result.side === 'buy' && map.type === 'market') {
+        const task = this.botBinanceTradeService.createOrderBotBuyMarket(
+          result,
+          map,
+        )
+        tasks.push(task)
       }
-      //   res = await this.botBinanceTradeService.createOrderBuyMarket(result)
       if (result.side === 'sell' && map.type === 'market') {
+        const task = this.botBinanceTradeService.createOrderBotSellMarket(
+          result,
+          map,
+        )
+        tasks.push(task)
       }
-      //   res = await this.botBinanceTradeService.createOrderSellMarket(result)
     }
     await Promise.all(tasks)
 
