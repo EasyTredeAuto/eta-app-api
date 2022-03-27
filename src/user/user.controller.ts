@@ -33,7 +33,6 @@ export class UserController {
     const { roles } = request.user.data
     if (roles !== AppRoles.ADMIN)
       throw new BadRequestException('Forbidden resource')
-      console.log(search)
     return this.userService.getMany(page, size, search)
   }
 

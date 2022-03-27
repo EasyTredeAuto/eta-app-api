@@ -8,14 +8,13 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
-import { AppRoles } from 'src/app.roles'
 import { Auth } from 'src/common/decorators'
-import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 import { UserService } from 'src/user/user.service'
-import { payloadBotReq, payloadUpdateBotReq } from './dtos/create-bot-dto'
+import { Like } from 'typeorm'
 import {
   payloadActiveBotMappingReq,
   payloadBotMappingReq,
@@ -28,7 +27,6 @@ import { BotAdminService } from './manage-bot-admin.service'
 export class UseBotByUserController {
   constructor(
     private readonly botsService: BotAdminService,
-    private readonly botBinanceTradeService: BotBinanceTradeService,
     private readonly userService: UserService,
   ) {}
 
@@ -37,6 +35,7 @@ export class UseBotByUserController {
   async findAll(
     @Param('page') page: number,
     @Param('size') size: number,
+    @Query('search') search: string,
     @Request() request,
   ) {
     const { id } = request.user.data
@@ -44,6 +43,7 @@ export class UseBotByUserController {
       { user: id },
       page,
       size,
+      search,
     )
     return { message: 'this is all bot', ...allBot }
   }
@@ -128,7 +128,7 @@ export class UseBotByUserController {
   ) {
     const { id } = request.user.data
     await this.botsService.deleteMapping(botId, mappingId)
-    const allBot = await this.botsService.findAllAndCountMapping({ id }, 0, 10)
+    const allBot = await this.botsService.findAllAndCountMapping({ id }, 0, 10, '')
     return { message: 'bot deleted', data: allBot }
   }
 }

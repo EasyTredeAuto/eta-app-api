@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { User } from 'src/schemas/user.entity'
-import { Repository } from 'typeorm'
+import { Like, Repository } from 'typeorm'
 import {
   payloadActiveBotMappingReq,
   payloadBotMappingReq,
@@ -62,25 +62,34 @@ export class BotAdminService {
   }
 
   // bot user mapping =====================================================================================================================
-  async findAllAndCountMapping(where: any, page: number, size: number) {
+  async findAllAndCountMapping(
+    where: any,
+    page: number,
+    size: number,
+    search: string,
+  ) {
     const [_result, total] = await this.useBotRepository.findAndCount({
       where,
       order: { createdAt: 'DESC' },
       take: size,
       skip: page * size,
     })
-    const bots = await this.mangeBotRepository.find()
+    const bots = await this.mangeBotRepository.find({
+      where: { symbol: Like(`%${search}%`) },
+    })
     let result = []
     for (const res of JSON.parse(JSON.stringify(_result))) {
       const optionBot = bots.find((x) => x.id === res.botIds)
-      res.name = optionBot.name
-      res.symbol = optionBot.symbol
-      res.asset = optionBot.asset
-      res.currency = optionBot.currency
-      res.detail = optionBot.detail
-      result.push(res)
+      if (optionBot) {
+        res.name = optionBot.name
+        res.symbol = optionBot.symbol
+        res.asset = optionBot.asset
+        res.currency = optionBot.currency
+        res.detail = optionBot.detail
+        result.push(res)
+      }
     }
-    return { data: result, count: total }
+    return { data: result, count: result.length }
   }
   async findAllMapping(where: any, page: number, size: number) {
     const result = await this.useBotRepository.find({

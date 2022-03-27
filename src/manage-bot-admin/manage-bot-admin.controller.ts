@@ -8,6 +8,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
 } from '@nestjs/common'
 import { ApiTags } from '@nestjs/swagger'
@@ -15,6 +16,7 @@ import { AppRoles } from 'src/app.roles'
 import { Auth } from 'src/common/decorators'
 import { BotBinanceTradeService } from 'src/public-trade/bot-binance-trade.service'
 import { UserService } from 'src/user/user.service'
+import { Like } from 'typeorm'
 import { payloadBotReq, payloadUpdateBotReq } from './dtos/create-bot-dto'
 import { payloadActiveBotMappingReq } from './dtos/create-mapping'
 import { BotAdminService } from './manage-bot-admin.service'
@@ -33,13 +35,14 @@ export class ManageBotAdminController {
   async findAll(
     @Param('page') page: number,
     @Param('size') size: number,
+    @Query('search') search: string,
     @Request() request,
   ) {
     const { id, roles } = request.user.data
     if (roles !== AppRoles.ADMIN)
       throw new BadRequestException('Forbidden resource')
     const allBot = await this.botsService.findAllAndCount(
-      { user: id },
+      { user: id, name: Like(`%${search}%`) },
       page,
       size,
     )
