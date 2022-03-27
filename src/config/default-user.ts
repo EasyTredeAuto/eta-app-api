@@ -28,6 +28,7 @@ export const setDefaultUser = async (config: ConfigService) => {
       secretKey: config.get(env.DEFAULT_SECRET_KEY),
       apiKey: config.get(env.DEFAULT_API_KEY),
       user: adminUser,
+      userIds: adminUser.id
     }) as ApiSetting
     await apiRepository.save(apiUser)
 
