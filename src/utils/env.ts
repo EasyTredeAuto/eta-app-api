@@ -25,4 +25,7 @@ export default {
 
   // bot key
   SECRET_KEY_BOT: 'SECRET_KEY_BOT',
+
+  // base url
+  PUBLIC_BASE_URL: 'PUBLIC_BASE_URL',
 }

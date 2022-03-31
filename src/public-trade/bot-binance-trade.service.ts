@@ -25,6 +25,8 @@ import { User } from 'src/schemas/user.entity'
 import { UserService } from 'src/user/user.service'
 import { Repository } from 'typeorm'
 import { Transaction } from '../schemas/user-url-orders-transaction.entity'
+import env from '../utils/env'
+import { ConfigService } from '@nestjs/config'
 
 @Injectable()
 export class BotBinanceTradeService {
@@ -44,6 +46,7 @@ export class BotBinanceTradeService {
     private readonly binanceService: BinanceCoinService,
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async roundUpdate(id: number) {
@@ -229,7 +232,8 @@ export class BotBinanceTradeService {
       body,
     )
     const token = this.jwtService.sign(payload)
-    const url = `http://159.223.65.62:80/public-trade/order?token=${token}`
+    const base_path = this.configService.get(env.PUBLIC_BASE_URL)
+    const url = `${base_path}/public-trade/order?token=${token}`
     await this.mangeOrdersRepository.update({ id: newBot.id }, { url })
     return url
   }
@@ -243,7 +247,8 @@ export class BotBinanceTradeService {
       body,
     )
     const token = this.jwtService.sign(payload)
-    const url = `http://159.223.65.62:80/public-trade/order?token=${token}`
+    const base_path = this.configService.get(env.PUBLIC_BASE_URL)
+    const url = `${base_path}/public-trade/order?token=${token}`
     const bot = {
       name: body.name,
       symbol: body.asset + body.currency,
@@ -303,8 +308,9 @@ export class BotBinanceTradeService {
     )
     const tokenBuy = this.jwtService.sign(payloadBuy)
     const tokenSell = this.jwtService.sign(payloadSell)
-    const urlBuy = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenBuy}`
-    const urlSell = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenSell}`
+    const base_path = this.configService.get(env.PUBLIC_BASE_URL)
+    const urlBuy = `${base_path}/public-trade/order/admin?token=${tokenBuy}`
+    const urlSell = `${base_path}/public-trade/order/admin?token=${tokenSell}`
     await this.mangeBotsRepository.update(
       { id: newBot.id },
       { urlBuy, urlSell },
@@ -339,8 +345,9 @@ export class BotBinanceTradeService {
     )
     const tokenBuy = this.jwtService.sign(payloadBuy)
     const tokenSell = this.jwtService.sign(payloadSell)
-    const urlBuy = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenBuy}`
-    const urlSell = `http://159.223.65.62:80/public-trade/order/admin?token=${tokenSell}`
+    const base_path = this.configService.get(env.PUBLIC_BASE_URL)
+    const urlBuy = `${base_path}/public-trade/order/admin?token=${tokenBuy}`
+    const urlSell = `${base_path}/public-trade/order/admin?token=${tokenSell}`
     const newUpdate = Object.assign(bot, { urlBuy, urlSell })
     await this.mangeBotsRepository.update({ id: body.id }, newUpdate)
     return { urlBuy, urlSell }
@@ -406,7 +413,7 @@ export class BotBinanceTradeService {
       bot: botData,
       user: mapping.user,
       mapping: mapping,
-      botIds: botData.id
+      botIds: botData.id,
     } as transactionBotUserMapping
     const isTransaction = await this.transactionBotUserMappingRepository.create(
       transaction,
